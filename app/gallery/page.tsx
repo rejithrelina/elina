@@ -1,24 +1,31 @@
 "use client"
-import GalleryLightbox from "@/components/gallery-lightbox"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import Image from "next/image"
+
 import { useState } from "react"
+import Image from "next/image"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import GalleryLightbox from "@/components/gallery-lightbox"
+import { galleryItems } from "@/lib/data"
+
 export default function GalleryPage() {
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
   const openLightbox = (index: number) => {
     setCurrentImageIndex(index)
     setLightboxOpen(true)
   }
+
   const closeLightbox = () => {
     setLightboxOpen(false)
   }
+
   // Convert gallery items to lightbox format
   const lightboxImages = galleryItems.map((item) => ({
     id: item.id,
     src: item.image,
     alt: item.title,
   }))
+
   return (
     <main className="min-h-screen py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -28,6 +35,7 @@ export default function GalleryPage() {
             Explore our portfolio of premium kitchen equipment and installations
           </p>
         </div>
+
         <Tabs defaultValue="all" className="w-full">
           <div className="flex justify-center mb-12">
             <TabsList className="grid grid-cols-4 w-full max-w-2xl">
@@ -37,6 +45,7 @@ export default function GalleryPage() {
               <TabsTrigger value="equipment">Equipment</TabsTrigger>
             </TabsList>
           </div>
+
           <TabsContent value="all" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {galleryItems.map((item, index) => (
@@ -44,6 +53,7 @@ export default function GalleryPage() {
               ))}
             </div>
           </TabsContent>
+
           <TabsContent value="commercial" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {galleryItems
@@ -54,6 +64,7 @@ export default function GalleryPage() {
                 })}
             </div>
           </TabsContent>
+
           <TabsContent value="residential" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {galleryItems
@@ -64,6 +75,7 @@ export default function GalleryPage() {
                 })}
             </div>
           </TabsContent>
+
           <TabsContent value="equipment" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {galleryItems
@@ -75,6 +87,7 @@ export default function GalleryPage() {
             </div>
           </TabsContent>
         </Tabs>
+
         <GalleryLightbox
           images={lightboxImages}
           initialIndex={currentImageIndex}
@@ -85,6 +98,7 @@ export default function GalleryPage() {
     </main>
   )
 }
+
 // Gallery Item Component
 function GalleryItem({ item, onClick }) {
   return (
@@ -112,69 +126,3 @@ function GalleryItem({ item, onClick }) {
     </div>
   )
 }
-// Sample gallery data
-const galleryItems = [
-  {
-    id: 1,
-    title: "Commercial Kitchen Setup",
-    description: "Complete kitchen setup for a 5-star hotel in Bangalore",
-    category: "commercial",
-    image: "/images/gallery/commercial-1.png",
-  },
-  {
-    id: 2,
-    title: "Restaurant Kitchen Installation",
-    description: "Modern kitchen installation for a fine dining restaurant",
-    category: "commercial",
-    image: "/images/gallery/commercial-2.png",
-  },
-  {
-    id: 3,
-    title: "Luxury Home Kitchen",
-    description: "Custom kitchen design for a luxury residence",
-    category: "residential",
-    image: "/images/gallery/residential-1.png",
-  },
-  {
-    id: 4,
-    title: "Apartment Kitchen Renovation",
-    description: "Complete renovation of an apartment kitchen",
-    category: "residential",
-    image: "/images/gallery/residential-2.png",
-  },
-  {
-    id: 5,
-    title: "Commercial Range Cookers",
-    description: "High-performance range cookers for commercial use",
-    category: "equipment",
-    image: "/images/gallery/equipment-1.png",
-  },
-  {
-    id: 6,
-    title: "Stainless Steel Work Tables",
-    description: "Custom stainless steel work tables for professional kitchens",
-    category: "equipment",
-    image: "/images/gallery/equipment-2.png",
-  },
-  {
-    id: 7,
-    title: "Hotel Buffet Setup",
-    description: "Complete buffet line setup for a hotel restaurant",
-    category: "commercial",
-    image: "/images/gallery/commercial-3.png",
-  },
-  {
-    id: 8,
-    title: "Modern Home Kitchen",
-    description: "Contemporary kitchen design for a modern home",
-    category: "residential",
-    image: "/images/gallery/residential-3.png",
-  },
-  {
-    id: 9,
-    title: "Ventilation Systems",
-    description: "Advanced kitchen ventilation systems for commercial use",
-    category: "equipment",
-    image: "/images/gallery/equipment-3.png",
-  },
-]

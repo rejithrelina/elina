@@ -1,15 +1,18 @@
 "use client"
+
+import { useState } from "react"
+import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { ChevronDown, Menu, ShoppingCart, X } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import { useState } from "react"
-const Header = () => {
+
+export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
   }
+
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,13 +20,14 @@ const Header = () => {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
-              src="https://elina.frappe.cloud/files/with%20black%20png%20logo.png"
-              alt="Syena Kitchenconceptz Logo"
+              src="https://sjc.microlink.io/sbIoP6I7zEzEZ1tSC3Ve_93uYnu-eLXylHxX_A9MopKMo2vwDgMoLExXiEAOXYp2hNAO80kO12QUuCZqXc1_Hw.jpeg"
+              alt="Elina Logo"
               width={180}
               height={50}
               className="h-10 w-auto"
             />
           </Link>
+
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link href="/" className="text-gray-700 hover:text-red-600 font-medium transition-colors">
@@ -31,12 +35,26 @@ const Header = () => {
             </Link>
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center text-gray-700 hover:text-red-600 font-medium transition-colors">
-                Products <ChevronDown className="ml-1 h-4 w-4" />
+                Products
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="ml-1 h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem>
                   <Link href="/products/commercial" className="w-full">
                     Commercial Equipment
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/products/residential" className="w-full">
+                    Residential Solutions
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
@@ -56,21 +74,57 @@ const Header = () => {
               Contact
             </Link>
           </nav>
+
           {/* Action Buttons */}
           <div className="hidden md:flex items-center space-x-4">
             <Button variant="ghost" size="icon" className="text-gray-700">
-              <ShoppingCart className="h-5 w-5" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
             </Button>
             <Button className="bg-red-600 hover:bg-red-700 text-white">Request Quote</Button>
           </div>
+
           {/* Mobile Menu Button */}
           <div className="md:hidden">
             <Button variant="ghost" size="icon" onClick={toggleMenu}>
-              {isMenuOpen ? <X className="h-6 w-6 text-gray-700" /> : <Menu className="h-6 w-6 text-gray-700" />}
+              {isMenuOpen ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-gray-700"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-gray-700"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
             </Button>
           </div>
         </div>
       </div>
+
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-white border-t">
@@ -140,4 +194,3 @@ const Header = () => {
     </header>
   )
 }
-export default Header

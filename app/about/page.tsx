@@ -1,5 +1,6 @@
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import Image from "next/image"
+import { Button } from "@/components/ui/button"
+
 export default function AboutPage() {
   return (
     <main className="min-h-screen">
@@ -23,11 +24,12 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
       {/* Company Overview */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row items-center gap-12">
-            <div className="lg:w-1/3">
+            <div className="lg:w-1/2">
               <h2 className="text-3xl font-bold mb-6 text-gray-900">Our Story</h2>
               <p className="text-lg text-gray-700 mb-6">
                 Founded in 2018, Syena Kitchenconceptz Manufacturing Private Limited began with a vision to
@@ -45,7 +47,7 @@ export default function AboutPage() {
             </div>
             <div className="lg:w-1/2 relative h-[400px] w-full rounded-lg overflow-hidden shadow-xl">
               <Image
-                src="https://bgc.in/media/cutout-legacy.png"
+                src="/images/company-history.jpg"
                 alt="Syena Kitchenconceptz History"
                 fill
                 className="object-cover"
@@ -54,6 +56,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
       {/* Mission & Vision */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -63,6 +66,7 @@ export default function AboutPage() {
               Guided by our core values and commitment to excellence
             </p>
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="bg-white p-8 rounded-lg shadow-md">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Mission</h3>
@@ -75,6 +79,7 @@ export default function AboutPage() {
                 and continuous improvement in all aspects of our business.
               </p>
             </div>
+
             <div className="bg-white p-8 rounded-lg shadow-md">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Vision</h3>
               <p className="text-gray-700 mb-6">
@@ -89,6 +94,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
       {/* Team Section */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -96,11 +102,12 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold text-gray-900">Our Leadership Team</h2>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">Meet the experts behind our success</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {teamMembers.map((member) => (
               <div key={member.id} className="text-center">
                 <div className="relative h-64 w-64 mx-auto rounded-full overflow-hidden mb-6">
-                  <Image src={member.image || "https://elina.frappe.cloud/files/placeholder.png"} alt={member.name} fill className="object-cover" />
+                  <Image src={member.image || "/placeholder.svg"} alt={member.name} fill className="object-cover" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900">{member.name}</h3>
                 <p className="text-red-600 mb-4">{member.position}</p>
@@ -110,6 +117,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
       {/* Manufacturing Facility */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -141,6 +149,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
       {/* CTA Section */}
       <section className="py-20 bg-red-600 text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -153,7 +162,7 @@ export default function AboutPage() {
             <Button size="lg" className="bg-white text-red-600 hover:bg-gray-100">
               Request a Quote
             </Button>
-            <Button size="lg" variant="outline" className="text-black border-white hover:bg-white/10">
+            <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10">
               Contact Us
             </Button>
           </div>
@@ -162,34 +171,28 @@ export default function AboutPage() {
     </main>
   )
 }
+
 // Sample data
 const teamMembers = [
   {
     id: 1,
-    name: "Jyothish Antony",
-    position: "Director",
-    bio: "Jyothish brings over 15 years of leadership experience in manufacturing and corporate governance. As Director, he drives strategic direction and ensures compliance across all operations.",
-    image: "https://elina.frappe.cloud/files/placeholder.png",
+    name: "Rajiv Sharma",
+    position: "Founder & CEO",
+    bio: "With over 20 years of experience in the kitchen equipment industry, Rajiv founded Syena Kitchenconceptz with a vision to revolutionize kitchen solutions in India.",
+    image: "/images/team-1.jpg",
   },
   {
     id: 2,
-    name: "P Jagadeesh Kumar",
-    position: "Chief Executive Officer",
-    bio: "P Jagadeesh Kumar is a seasoned executive with a strong background in glass and crockery manufacturing. He leads Syena’s vision for growth, focusing on innovation and market expansion.",
-    image: "https://elina.frappe.cloud/files/placeholder.png",
+    name: "Priya Patel",
+    position: "Chief Design Officer",
+    bio: "Priya brings her expertise in industrial design to create innovative and functional kitchen equipment that meets the highest standards of aesthetics and usability.",
+    image: "/images/team-2.jpg",
   },
   {
     id: 3,
-    name: "Sunit Jagadeesh",
-    position: "Chief Operating Officer",
-    bio: "Sunit oversees daily operations at Syena, optimizing processes and coordinating cross-functional teams to ensure timely delivery and top-quality products.",
-    image: "https://elina.frappe.cloud/files/placeholder.png",
+    name: "Vikram Mehta",
+    position: "Head of Operations",
+    bio: "Vikram oversees our manufacturing processes, ensuring efficiency, quality, and timely delivery of all our products to customers across India.",
+    image: "/images/team-3.jpg",
   },
-  {
-    id: 4,
-    name: "Sneha Jagadeesh",
-    position: "Director",
-    bio: "Sneha Jagadeesh brings extensive expertise in corporate strategy and stakeholder engagement. As Director, she focuses on driving business development and fostering key partnerships.",
-    image: "https://elina.frappe.cloud/files/placeholder.png",
-  },
-];
+]
