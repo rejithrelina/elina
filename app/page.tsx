@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
@@ -7,8 +9,11 @@ import FeatureCard from "@/components/feature-card"
 import TestimonialCard from "@/components/testimonial-card"
 import ProductCard from "@/components/product-card"
 import { products, features, testimonials } from "@/lib/data"
+import { useQuoteModal } from "@/context/quote-modal-context"
 
 export default function Home() {
+  const { openQuoteModal } = useQuoteModal()
+
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
@@ -32,8 +37,13 @@ export default function Home() {
               <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white">
                 <Link href="/products">Explore Products</Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10">
-                <Link href="/contact">Contact Us</Link>
+              <Button
+                size="lg"
+                variant="outline"
+                className="text-white border-white hover:bg-white/10"
+                onClick={openQuoteModal}
+              >
+                Request a Quote
               </Button>
             </div>
           </div>

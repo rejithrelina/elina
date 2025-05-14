@@ -5,9 +5,11 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useQuoteModal } from "@/context/quote-modal-context"
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { openQuoteModal } = useQuoteModal()
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -93,7 +95,9 @@ export default function Header() {
                 />
               </svg>
             </Button>
-            <Button className="bg-red-600 hover:bg-red-700 text-white">Request Quote</Button>
+            <Button className="bg-red-600 hover:bg-red-700 text-white" onClick={openQuoteModal}>
+              Request Quote
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -185,7 +189,15 @@ export default function Header() {
                 Contact
               </Link>
               <div className="pt-4 border-t border-gray-100">
-                <Button className="w-full bg-red-600 hover:bg-red-700 text-white">Request Quote</Button>
+                <Button
+                  className="w-full bg-red-600 hover:bg-red-700 text-white"
+                  onClick={() => {
+                    openQuoteModal()
+                    toggleMenu()
+                  }}
+                >
+                  Request Quote
+                </Button>
               </div>
             </nav>
           </div>

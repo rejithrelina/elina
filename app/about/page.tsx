@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import { teamMembers } from "@/lib/data"
 
 export default function AboutPage() {
   return (
@@ -47,7 +48,7 @@ export default function AboutPage() {
             </div>
             <div className="lg:w-1/2 relative h-[400px] w-full rounded-lg overflow-hidden shadow-xl">
               <Image
-                src="/images/company-history.jpg"
+                src="https://placehold.co/800x600.png"
                 alt="Syena Kitchenconceptz History"
                 fill
                 className="object-cover"
@@ -171,28 +172,3 @@ export default function AboutPage() {
     </main>
   )
 }
-
-// Sample data
-const teamMembers = [
-  {
-    id: 1,
-    name: "Rajiv Sharma",
-    position: "Founder & CEO",
-    bio: "With over 20 years of experience in the kitchen equipment industry, Rajiv founded Syena Kitchenconceptz with a vision to revolutionize kitchen solutions in India.",
-    image: "/images/team-1.jpg",
-  },
-  {
-    id: 2,
-    name: "Priya Patel",
-    position: "Chief Design Officer",
-    bio: "Priya brings her expertise in industrial design to create innovative and functional kitchen equipment that meets the highest standards of aesthetics and usability.",
-    image: "/images/team-2.jpg",
-  },
-  {
-    id: 3,
-    name: "Vikram Mehta",
-    position: "Head of Operations",
-    bio: "Vikram oversees our manufacturing processes, ensuring efficiency, quality, and timely delivery of all our products to customers across India.",
-    image: "/images/team-3.jpg",
-  },
-]

@@ -4,11 +4,77 @@ import { useState } from "react"
 import Image from "next/image"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import GalleryLightbox from "@/components/gallery-lightbox"
-import { galleryItems } from "@/lib/data"
 
 export default function GalleryPage() {
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  // Updated gallery items with placeholder images
+  const galleryItems = [
+    {
+      id: 1,
+      title: "Commercial Kitchen Setup",
+      description: "Complete kitchen setup for a 5-star hotel in Bangalore",
+      category: "commercial",
+      image: "https://placehold.co/600x400.png",
+    },
+    {
+      id: 2,
+      title: "Restaurant Kitchen Installation",
+      description: "Modern kitchen installation for a fine dining restaurant",
+      category: "commercial",
+      image: "https://placehold.co/600x400.png",
+    },
+    {
+      id: 3,
+      title: "Luxury Home Kitchen",
+      description: "Custom kitchen design for a luxury residence",
+      category: "residential",
+      image: "https://placehold.co/600x400.png",
+    },
+    {
+      id: 4,
+      title: "Apartment Kitchen Renovation",
+      description: "Complete renovation of an apartment kitchen",
+      category: "residential",
+      image: "https://placehold.co/600x400.png",
+    },
+    {
+      id: 5,
+      title: "Commercial Range Cookers",
+      description: "High-performance range cookers for commercial use",
+      category: "equipment",
+      image: "https://elina.frappe.cloud/files/product-1.png",
+    },
+    {
+      id: 6,
+      title: "Stainless Steel Work Tables",
+      description: "Custom stainless steel work tables for professional kitchens",
+      category: "equipment",
+      image: "https://elina.frappe.cloud/files/product-2.png",
+    },
+    {
+      id: 7,
+      title: "Hotel Buffet Setup",
+      description: "Complete buffet line setup for a hotel restaurant",
+      category: "commercial",
+      image: "https://placehold.co/600x400.png",
+    },
+    {
+      id: 8,
+      title: "Modern Home Kitchen",
+      description: "Contemporary kitchen design for a modern home",
+      category: "residential",
+      image: "https://placehold.co/600x400.png",
+    },
+    {
+      id: 9,
+      title: "Ventilation Systems",
+      description: "Advanced kitchen ventilation systems for commercial use",
+      category: "equipment",
+      image: "https://elina.frappe.cloud/files/product-3.png",
+    },
+  ]
 
   const openLightbox = (index: number) => {
     setCurrentImageIndex(index)

@@ -30,7 +30,7 @@ export const products = [
     name: "Refrigeration Units",
     slug: "refrigeration-units",
     description: "Energy-efficient refrigeration units designed for commercial kitchens with various capacity options.",
-    image: "/images/product-4.jpg",
+    image: "https://placehold.co/600x400.png",
     category: "commercial",
   },
   {
@@ -38,7 +38,7 @@ export const products = [
     name: "Modular Kitchen Systems",
     slug: "modular-kitchen-systems",
     description: "Customizable modular kitchen systems for residential spaces with modern design and functionality.",
-    image: "/images/product-5.jpg",
+    image: "https://placehold.co/600x400.png",
     category: "residential",
   },
   {
@@ -46,7 +46,7 @@ export const products = [
     name: "Kitchen Islands",
     slug: "kitchen-islands",
     description: "Versatile kitchen islands that provide additional workspace and storage for any kitchen layout.",
-    image: "/images/product-6.jpg",
+    image: "https://placehold.co/600x400.png",
     category: "residential",
   },
 ]
@@ -273,28 +273,28 @@ export const teamMembers = [
     name: "Jyothish Antony",
     position: "Director",
     bio: "Jyothish brings over 15 years of leadership experience in manufacturing and corporate governance. As Director, he drives strategic direction and ensures compliance across all operations.",
-    image: "https://elina.frappe.cloud/files/placeholder.png",
+    image: "https://placehold.co/400x400.png",
   },
   {
     id: 2,
     name: "P Jagadeesh Kumar",
     position: "Chief Executive Officer",
     bio: "P Jagadeesh Kumar is a seasoned executive with a strong background in glass and crockery manufacturing. He leads Syena's vision for growth, focusing on innovation and market expansion.",
-    image: "https://elina.frappe.cloud/files/placeholder.png",
+    image: "https://placehold.co/400x400.png",
   },
   {
     id: 3,
     name: "Sunit Jagadeesh",
     position: "Chief Operating Officer",
     bio: "Sunit oversees daily operations at Syena, optimizing processes and coordinating cross-functional teams to ensure timely delivery and top-quality products.",
-    image: "https://elina.frappe.cloud/files/placeholder.png",
+    image: "https://placehold.co/400x400.png",
   },
   {
     id: 4,
     name: "Sneha Jagadeesh",
     position: "Director",
     bio: "Sneha Jagadeesh brings extensive expertise in corporate strategy and stakeholder engagement. As Director, she focuses on driving business development and fostering key partnerships.",
-    image: "https://elina.frappe.cloud/files/placeholder.png",
+    image: "https://placehold.co/400x400.png",
   },
 ]
 

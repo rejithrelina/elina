@@ -5,6 +5,9 @@ import "./globals.css"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { ThemeProvider } from "@/components/theme-provider"
+import { QuoteModalProvider } from "@/context/quote-modal-context"
+import FloatingQuoteButton from "@/components/floating-quote-button"
+import QuoteModalWrapper from "@/components/quote-modal-wrapper"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -23,9 +26,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light">
-          <Header />
-          {children}
-          <Footer />
+          <QuoteModalProvider>
+            <Header />
+            {children}
+            <Footer />
+            <FloatingQuoteButton />
+            <QuoteModalWrapper />
+          </QuoteModalProvider>
         </ThemeProvider>
       </body>
     </html>
