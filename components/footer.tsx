@@ -9,11 +9,11 @@ export default function Footer() {
           {/* Company Info */}
           <div>
             <Image
-              src="https://sjc.microlink.io/sbIoP6I7zEzEZ1tSC3Ve_93uYnu-eLXylHxX_A9MopKMo2vwDgMoLExXiEAOXYp2hNAO80kO12QUuCZqXc1_Hw.jpeg"
+              src="https://elina.frappe.cloud/files/with%20black%20png%20logo.png"
               alt="Elina Logo"
               width={180}
               height={50}
-              className="h-10 w-auto mb-6"
+              className="h-10 w-auto mb-6 bg-white p-1 rounded"
             />
             <p className="text-gray-300 mb-6">
               Leading manufacturer of premium kitchen equipment for commercial and residential spaces since 2018.

@@ -22,7 +22,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
-              src="https://sjc.microlink.io/sbIoP6I7zEzEZ1tSC3Ve_93uYnu-eLXylHxX_A9MopKMo2vwDgMoLExXiEAOXYp2hNAO80kO12QUuCZqXc1_Hw.jpeg"
+              src="https://elina.frappe.cloud/files/with%20black%20png%20logo.png"
               alt="Elina Logo"
               width={180}
               height={50}
