@@ -20,7 +20,7 @@ export default function Home() {
       <section className="relative h-[90vh] flex items-center">
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://sjc.microlink.io/K_qBHWr4mJRx9mRvU8Jh3mdsElaNBNCRYBZfRNmcPTrB1UMTbC-jgC-MYaURNXkStY_Iqimds2Yj14uML_WZ5A.jpeg"
+            src="https://elina.frappe.cloud/files/hero-kitchen.png"
             alt="Modern kitchen equipment"
             fill
             className="object-cover brightness-[0.85]"
@@ -40,7 +40,7 @@ export default function Home() {
               <Button
                 size="lg"
                 variant="outline"
-                className="text-white border-white hover:bg-white/10"
+                className="text-black border-white hover:bg-white/10"
                 onClick={openQuoteModal}
               >
                 Request a Quote
