@@ -1,11 +1,9 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
-import { submitQuoteRequest } from "@/app/actions/quote-form"
 
 interface QuoteRequestModalProps {
   isOpen: boolean
@@ -23,9 +21,33 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
 
     try {
       const formData = new FormData(event.currentTarget)
-      const result = await submitQuoteRequest(formData)
 
-      setSubmitResult(result)
+      // Extract form data
+      const data = {
+        firstName: formData.get("firstName") as string,
+        lastName: (formData.get("lastName") as string) || "",
+        email: formData.get("email") as string,
+        mobile: formData.get("mobile") as string,
+        organization: (formData.get("organization") as string) || "",
+        requestType: formData.get("requestType") as string,
+        source: (formData.get("source") as string) || "Website",
+      }
+
+      // Send data to our secure API route
+      const response = await fetch("/api/submit-form", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+
+      const result = await response.json()
+
+      setSubmitResult({
+        success: result.success,
+        message: result.message,
+      })
 
       if (result.success) {
         // Reset form on success
@@ -38,9 +60,10 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
         }, 3000)
       }
     } catch (error) {
+      console.error("Form submission error:", error)
       setSubmitResult({
         success: false,
-        message: "An unexpected error occurred. Please try again.",
+        message: "There was an error submitting your form. Please try again later.",
       })
     } finally {
       setIsSubmitting(false)

@@ -1,10 +1,8 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { submitQuoteRequest } from "@/app/actions/quote-form"
 
 export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -17,22 +15,43 @@ export default function ContactForm() {
 
     try {
       const formData = new FormData(event.currentTarget)
-      // Ensure the form has a request type
-      if (!formData.get("requestType")) {
-        formData.append("requestType", "Contact Form Submission")
+
+      // Extract form data
+      const data = {
+        firstName: formData.get("firstName") as string,
+        lastName: (formData.get("lastName") as string) || "",
+        email: formData.get("email") as string,
+        mobile: formData.get("mobile") as string,
+        organization: (formData.get("organization") as string) || "",
+        requestType: formData.get("requestType") as string,
+        source: (formData.get("source") as string) || "Website Contact Form",
       }
 
-      const result = await submitQuoteRequest(formData)
-      setSubmitResult(result)
+      // Send data to our secure API route
+      const response = await fetch("/api/submit-form", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+
+      const result = await response.json()
+
+      setSubmitResult({
+        success: result.success,
+        message: result.message,
+      })
 
       if (result.success) {
         // Reset form on success
         ;(event.target as HTMLFormElement).reset()
       }
     } catch (error) {
+      console.error("Form submission error:", error)
       setSubmitResult({
         success: false,
-        message: "An unexpected error occurred. Please try again.",
+        message: "There was an error submitting your form. Please try again later.",
       })
     } finally {
       setIsSubmitting(false)
