@@ -48,7 +48,7 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
         Authorization: `token ${API_KEY}:${API_SECRET}`,
         "Content-Type": "application/json",
       },*/
-      const resp = await fetch("=https://elina.frappe.cloud/api/resource/Lead", {
+      const resp = await fetch("https://elina.frappe.cloud/api/resource/Lead", {
         method: "POST",
         headers: {
           "Authorization": `token 9403214475f834f:df3e2e8bfee05db`,
