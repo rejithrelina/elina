@@ -57,6 +57,19 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
       body: JSON.stringify(payload),
       })
       const data = await resp.json()
+            /* ---------- special-case “already submitted” ---------- */
+    const duplicate =
+      resp.status === 409 ||                       // HTTP 409
+      data?.exc_type === "DuplicateEntryError" ||  // explicit flag
+      String(data?._server_messages).includes("DuplicateEntryError");
+    if (duplicate) {
+      setSubmitResult({
+        success: true,               // green banner; change to false if you prefer red
+        message:
+          "Looks like you’ve already submitted a request with this e-mail address. We’ll get back to you shortly!",
+      });
+      return;                        // stop here – no error thrown
+    }
       if (!resp.ok) throw new Error(data?.message || resp.statusText)
       setSubmitResult({
         success: true,
