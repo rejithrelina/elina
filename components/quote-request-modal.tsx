@@ -2,6 +2,9 @@
 import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
 import { useState } from "react"
+const API_URL = process.env.API_URL!      // "!" = throw if missing
+const API_KEY = process.env.API_KEY!
+const API_SECRET = process.env.API_SECRET!
 interface QuoteRequestModalProps {
   isOpen: boolean
   onClose: () => void
@@ -15,6 +18,7 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
     email: "",
     mobile: "",
     organization: "",
+    status: "Open",
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitResult, setSubmitResult] = useState<{ success: boolean; message: string } | null>(null)
@@ -34,15 +38,16 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
       email_id: formState.email,
       mobile_no: formState.mobile,
       company_name: formState.organization,
+      status: formState.status,
     }
     try {
-      const resp = await fetch("https://elina.frappe.cloud/api/resource/Lead", {
-        method: "POST",
-        headers: {
-          "Authorization": `token 9403214475f834f:df3e2e8bfee05db`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
+      const resp = await fetch(`${API_URL}/resource/Lead`, {
+      method: "POST",
+      headers: {
+        Authorization: `token ${API_KEY}:${API_SECRET}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
       })
       const data = await resp.json()
       if (!resp.ok) throw new Error(data?.message || resp.statusText)
@@ -58,6 +63,7 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
         email: "",
         mobile: "",
         organization: "",
+        status: "Open",
       })
       setTimeout(() => {
         onClose()
