@@ -194,32 +194,33 @@ export const galleryItems = [
 export const teamMembers = [
   {
     id: 1,
-    name: "Jyothish Antony",
-    position: "Director",
-    bio: "Jyothish brings over 15 years of leadership experience in manufacturing and corporate governance. As Director, he drives strategic direction and ensures compliance across all operations.",
-    image: "https://placehold.co/400x400.png",
-  },
-  {
-    id: 2,
     name: "P Jagadeesh Kumar",
     position: "Chief Executive Officer",
     bio: "P Jagadeesh Kumar is a seasoned executive with a strong background in glass and crockery manufacturing. He leads Syena's vision for growth, focusing on innovation and market expansion.",
-    image: "https://placehold.co/400x400.png",
+    image: "https://elina.frappe.cloud/files/Jagadeesh-Kumar.png",
   },
   {
-    id: 3,
-    name: "Sunit Jagadeesh",
-    position: "Chief Operating Officer",
-    bio: "Sunit oversees daily operations at Syena, optimizing processes and coordinating cross-functional teams to ensure timely delivery and top-quality products.",
-    image: "https://placehold.co/400x400.png",
-  },
-  {
-    id: 4,
+    id: 2,
     name: "Sneha Jagadeesh",
     position: "Director",
     bio: "Sneha Jagadeesh brings extensive expertise in corporate strategy and stakeholder engagement. As Director, she focuses on driving business development and fostering key partnerships.",
-    image: "https://placehold.co/400x400.png",
+    image: "https://elina.frappe.cloud/files/Sneha-Jagadeesh.png",
   },
+    {
+    id: 3,
+    name: "Jyothish Antony",
+    position: "Director",
+    bio: "Jyothish brings over 15 years of leadership experience in manufacturing and corporate governance. As Director, he drives strategic direction and ensures compliance across all operations.",
+    image: "https://elina.frappe.cloud/files/Jyothish-Antony.png",
+  },
+  {
+    id: 4,
+    name: "Sunit Jagadeesh",
+    position: "Chief Operating Officer",
+    bio: "Sunit oversees daily operations at Syena, optimizing processes and coordinating cross-functional teams to ensure timely delivery and top-quality products.",
+    image: "https://elina.frappe.cloud/files/Sunit-Jagadeesh.png",
+  },
+
 ]
 
 // Add company contact information
