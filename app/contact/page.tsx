@@ -1,7 +1,10 @@
 "use client"
-import ContactForm from "@/components/contact-form"
+import { Button } from "@/components/ui/button"
+import { useQuoteModal } from "@/context/quote-modal-context"
 
 export default function ContactPage() {
+  const { openQuoteModal } = useQuoteModal()
+
   return (
     <main className="min-h-screen py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -15,8 +18,16 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Form */}
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Send Us a Message</h2>
-            <ContactForm />
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Request a Quote or Information</h2>
+            <div className="bg-gray-50 p-8 rounded-lg shadow-md">
+              <p className="text-gray-700 mb-6">
+                Please fill out the form below to request a quote or more information about our products and services.
+                Our team will get back to you as soon as possible.
+              </p>
+              <Button onClick={openQuoteModal} className="w-full bg-red-600 hover:bg-red-700 text-white">
+                Request a Quote
+              </Button>
+            </div>
           </div>
 
           {/* Contact Information */}

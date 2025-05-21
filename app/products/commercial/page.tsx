@@ -135,7 +135,7 @@ export default function CommercialEquipmentPage() {
             <Button size="lg" className="bg-white text-red-600 hover:bg-gray-100">
               <Link href="/contact">Contact Us</Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10">
+            <Button size="lg" variant="outline" className="text-black border-white hover:bg-white/10">
               <Link href="/products">View All Products</Link>
             </Button>
           </div>

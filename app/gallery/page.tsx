@@ -29,14 +29,14 @@ export default function GalleryPage() {
       id: 3,
       title: "Luxury Home Kitchen",
       description: "Custom kitchen design for a luxury residence",
-      category: "residential",
+      category: "renovation",
       image: "https://placehold.co/600x400.png",
     },
     {
       id: 4,
       title: "Apartment Kitchen Renovation",
       description: "Complete renovation of an apartment kitchen",
-      category: "residential",
+      category: "renovation",
       image: "https://placehold.co/600x400.png",
     },
     {
@@ -64,7 +64,7 @@ export default function GalleryPage() {
       id: 8,
       title: "Modern Home Kitchen",
       description: "Contemporary kitchen design for a modern home",
-      category: "residential",
+      category: "renovation",
       image: "https://placehold.co/600x400.png",
     },
     {
@@ -107,7 +107,7 @@ export default function GalleryPage() {
             <TabsList className="grid grid-cols-4 w-full max-w-2xl">
               <TabsTrigger value="all">All Projects</TabsTrigger>
               <TabsTrigger value="commercial">Commercial</TabsTrigger>
-              <TabsTrigger value="residential">Residential</TabsTrigger>
+              <TabsTrigger value="renovation">Renovation</TabsTrigger>
               <TabsTrigger value="equipment">Equipment</TabsTrigger>
             </TabsList>
           </div>
@@ -131,10 +131,10 @@ export default function GalleryPage() {
             </div>
           </TabsContent>
 
-          <TabsContent value="residential" className="mt-0">
+          <TabsContent value="renovation" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {galleryItems
-                .filter((item) => item.category === "residential")
+                .filter((item) => item.category === "renovation")
                 .map((item) => {
                   const index = galleryItems.findIndex((i) => i.id === item.id)
                   return <GalleryItem key={item.id} item={item} onClick={() => openLightbox(index)} />

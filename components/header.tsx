@@ -151,13 +151,7 @@ export default function Header() {
                   >
                     Commercial Equipment
                   </Link>
-                  <Link
-                    href="/products/residential"
-                    className="text-gray-600 hover:text-red-600 transition-colors block py-1"
-                    onClick={toggleMenu}
-                  >
-                    Residential Solutions
-                  </Link>
+                  
                   <Link
                     href="/products/custom"
                     className="text-gray-600 hover:text-red-600 transition-colors block py-1"

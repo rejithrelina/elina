@@ -1,8 +1,10 @@
 "use client"
 import { Button } from "@/components/ui/button"
+import type React from "react"
+
 import { X } from "lucide-react"
 import { useState } from "react"
-const API_URL = process.env.API_URL!      // "!" = throw if missing
+const API_URL = process.env.API_URL! // "!" = throw if missing
 const API_KEY = process.env.API_KEY!
 const API_SECRET = process.env.API_SECRET!
 interface QuoteRequestModalProps {
@@ -24,7 +26,7 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
   const [submitResult, setSubmitResult] = useState<{ success: boolean; message: string } | null>(null)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
-    setFormState(prev => ({ ...prev, [name]: value }))
+    setFormState((prev) => ({ ...prev, [name]: value }))
   }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,7 +35,7 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
     const payload = {
       first_name: formState.firstName,
       last_name: formState.lastName,
-      source: formState.source, 
+      source: formState.source,
       request_type: formState.requestType,
       email_id: formState.email,
       mobile_no: formState.mobile,
@@ -41,7 +43,7 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
       status: formState.status,
     }
     try {
-    /*
+      /*
       const resp = await fetch(`${API_URL}/resource/Lead`, {
       method: "POST",
       headers: {
@@ -51,29 +53,29 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
       const resp = await fetch("https://elina.frappe.cloud/api/resource/Lead", {
         method: "POST",
         headers: {
-          "Authorization": `token 9403214475f834f:df3e2e8bfee05db`,
+          Authorization: `token 9403214475f834f:df3e2e8bfee05db`,
           "Content-Type": "application/json",
         },
-      body: JSON.stringify(payload),
+        body: JSON.stringify(payload),
       })
       const data = await resp.json()
-            /* ---------- special-case “already submitted” ---------- */
-    const duplicate =
-      resp.status === 409 ||                       // HTTP 409
-      data?.exc_type === "DuplicateEntryError" ||  // explicit flag
-      String(data?._server_messages).includes("DuplicateEntryError");
-    if (duplicate) {
-      setSubmitResult({
-        success: true,               // green banner; change to false if you prefer red
-        message:
-          "Looks like you’ve already submitted a request with this e-mail address. We’ll get back to you shortly!",
-      });
-      return;                        // stop here – no error thrown
-    }
+      /* ---------- special-case "already submitted" ---------- */
+      const duplicate =
+        resp.status === 409 || // HTTP 409
+        data?.exc_type === "DuplicateEntryError" || // explicit flag
+        String(data?._server_messages).includes("DuplicateEntryError")
+      if (duplicate) {
+        setSubmitResult({
+          success: true, // green banner; change to false if you prefer red
+          message:
+            "Looks like you've already submitted a request with this e-mail address. We'll get back to you shortly!",
+        })
+        return // stop here – no error thrown
+      }
       if (!resp.ok) throw new Error(data?.message || resp.statusText)
       setSubmitResult({
         success: true,
-        message: "Your request has been submitted! We’ll get back to you soon.",
+        message: "Your request has been submitted! We'll get back to you soon.",
       })
       setFormState({
         firstName: "",
@@ -105,7 +107,8 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
         <div className="sticky top-0 bg-white z-10 flex items-center justify-between p-6 border-b">
           <h2 className="text-2xl font-bold">Request a Quote</h2>
           <Button variant="ghost" size="icon" onClick={onClose}>
-            <X className="h-5 w-5" /><span className="sr-only">Close</span>
+            <X className="h-5 w-5" />
+            <span className="sr-only">Close</span>
           </Button>
         </div>
         <div className="p-6">
@@ -122,7 +125,7 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  First Name*  
+                  First Name*
                   <input
                     name="firstName"
                     type="text"
@@ -135,7 +138,7 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Last Name  
+                  Last Name
                   <input
                     name="lastName"
                     type="text"
@@ -146,21 +149,10 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
                 </label>
               </div>
             </div>
+
             <div>
               <label className="block text-sm font-medium mb-1">
-                Source  
-                <input
-                  name="source"
-                  type="text"
-                  value={formState.source}
-                  readOnly
-                  className="mt-1 w-full px-3 py-2 border bg-gray-100 rounded"
-                />
-              </label>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Request Type*  
+                Request Type*
                 <select
                   name="requestType"
                   value={formState.requestType}
@@ -177,7 +169,7 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">
-                Email*  
+                Email*
                 <input
                   name="email"
                   type="email"
@@ -190,7 +182,7 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">
-                Mobile No*  
+                Mobile No*
                 <input
                   name="mobile"
                   type="tel"
@@ -203,7 +195,7 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">
-                Organization Name  
+                Organization Name
                 <input
                   name="organization"
                   type="text"

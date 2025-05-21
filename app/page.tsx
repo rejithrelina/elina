@@ -4,7 +4,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import ContactForm from "@/components/contact-form"
 import FeatureCard from "@/components/feature-card"
 import TestimonialCard from "@/components/testimonial-card"
 import ProductCard from "@/components/product-card"
@@ -161,7 +160,16 @@ export default function Home() {
             </div>
 
             <div className="lg:w-1/2">
-              <ContactForm />
+              <div className="bg-gray-50 p-8 rounded-lg shadow-md">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Request a Quote</h3>
+                <p className="text-gray-700 mb-6">
+                  Interested in our products? Fill out our quote request form and we'll get back to you with pricing and
+                  more information.
+                </p>
+                <Button onClick={openQuoteModal} className="w-full bg-red-600 hover:bg-red-700 text-white">
+                  Request a Quote
+                </Button>
+              </div>
             </div>
           </div>
         </div>

@@ -83,11 +83,7 @@ export default function Footer() {
                   Commercial Equipment
                 </Link>
               </li>
-              <li>
-                <Link href="/products/residential" className="text-gray-300 hover:text-white transition-colors">
-                  Residential Solutions
-                </Link>
-              </li>
+              
               <li>
                 <Link href="/products/custom" className="text-gray-300 hover:text-white transition-colors">
                   Custom Projects

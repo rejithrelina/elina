@@ -150,7 +150,7 @@ export default function CustomProjectsPage() {
             <Button size="lg" className="bg-white text-red-600 hover:bg-gray-100">
               <Link href="/contact">Schedule a Consultation</Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10">
+            <Button size="lg" variant="outline" className="text-black border-white hover:bg-white/10">
               <Link href="/gallery">View Our Gallery</Link>
             </Button>
           </div>
