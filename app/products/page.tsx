@@ -19,15 +19,10 @@ export default function ProductsPage() {
           <CategoryCard
             title="Commercial Equipment"
             description="Professional-grade kitchen equipment for restaurants, hotels, and catering facilities"
-            image="https://placehold.co/600x400.png"
+            image="https://elina.frappe.cloud/files/product-16-9.jpg"
             link="/products/commercial"
           />
-          <CategoryCard
-            title="Residential Solutions"
-            description="Premium kitchen solutions for modern homes and apartments"
-            image="https://placehold.co/600x400.png"
-            link="/products/residential"
-          />
+
           <CategoryCard
             title="Custom Projects"
             description="Tailored kitchen solutions designed specifically for your unique requirements"

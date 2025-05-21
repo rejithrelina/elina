@@ -173,21 +173,21 @@ const commercialCategories = [
     name: "Refrigeration",
     slug: "refrigeration",
     description: "Commercial refrigerators, freezers, and cold storage solutions for food preservation.",
-    image: "https://placehold.co/600x400.png",
+    image: "https://elina.frappe.cloud/files/product-6.png",
   },
   {
     id: 5,
     name: "Dishwashing",
     slug: "dishwashing",
     description: "High-capacity dishwashers and cleaning systems for busy commercial kitchens.",
-    image: "https://placehold.co/600x400.png",
+    image: "https://elina.frappe.cloud/files/product-5.png",
   },
   {
     id: 6,
     name: "Storage Solutions",
     slug: "storage-solutions",
     description: "Shelving, racks, and storage systems designed for commercial kitchen environments.",
-    image: "https://placehold.co/600x400.png",
+    image: "https://elina.frappe.cloud/files/product-4.png",
   },
 ]
 

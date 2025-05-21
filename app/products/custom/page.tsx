@@ -132,7 +132,7 @@ export default function CustomProjectsPage() {
               </ul>
             </div>
             <div className="lg:w-1/2 relative h-[400px] w-full rounded-lg overflow-hidden shadow-xl">
-              <Image src="https://placehold.co/800x600.png" alt="Custom Kitchen Design" fill className="object-cover" />
+              <Image src="https://elina.frappe.cloud/files/product-why.jpg" alt="Custom Kitchen Design" fill className="object-cover" />
             </div>
           </div>
         </div>
