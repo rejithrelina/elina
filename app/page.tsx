@@ -198,7 +198,7 @@ function ContactInfo() {
         </svg>
         <div>
           <h3 className="font-semibold text-gray-900">Phone</h3>
-          <p className="text-gray-700">+91 80 1234 5678</p>
+          <p className="text-gray-700">+91 98454 47744</p>
         </div>
       </div>
 
@@ -263,9 +263,8 @@ function ContactInfo() {
         <div>
           <h3 className="font-semibold text-gray-900">Business Hours</h3>
           <p className="text-gray-700">
-            Monday - Friday: 9:00 AM - 6:00 PM
-            <br />
-            Saturday: 9:00 AM - 1:00 PM
+            Monday - Saturday: 9:30 AM - 6:30 PM
+           
           </p>
         </div>
       </div>

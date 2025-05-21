@@ -90,7 +90,7 @@ export default function ContactPage() {
                   </svg>
                   <div>
                     <h3 className="font-semibold text-gray-900">Phone</h3>
-                    <p className="text-gray-700">+91 80 1234 5678</p>
+                    <p className="text-gray-700">+91 9845447744</p>
                     <p className="text-gray-700">+91 98765 43210 (Sales)</p>
                   </div>
                 </div>
