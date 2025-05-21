@@ -52,11 +52,7 @@ export default function SitemapPage() {
                     Commercial Equipment
                   </Link>
                 </li>
-                <li>
-                  <Link href="/products/residential" className="text-red-600 hover:underline">
-                    Residential Solutions
-                  </Link>
-                </li>
+
                 <li>
                   <Link href="/products/custom" className="text-red-600 hover:underline">
                     Custom Projects

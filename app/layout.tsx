@@ -17,9 +17,13 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Syena Kitchenconceptz - Premium Kitchen Equipment Manufacturer",
-  description: "Leading manufacturer of high-quality commercial and residential kitchen equipment in India.",
+  description:
+    "Leading manufacturer of high-quality commercial and residential kitchen equipment in India.",
+  icons: {
+    icon: "https://elina.frappe.cloud/files/favicon.ico",
+  },
     generator: 'v0.dev'
-}
+};
 
 export default function RootLayout({
   children,
@@ -29,6 +33,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+      <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@YourTwitterHandle" />
+        <meta
+          name="twitter:title"
+          content="Syena Kitchenconceptz - Premium Kitchen Equipment Manufacturer"
+        />
+        <meta
+          name="twitter:description"
+          content="Leading manufacturer of high-quality commercial and residential kitchen equipment in India."
+        />
+        <meta
+          name="twitter:image"
+          content="https://elina.frappe.cloud/files/elina-logo-w.jpg"
+        />
+
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-NSL8D1BTBG" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
@@ -38,6 +57,61 @@ export default function RootLayout({
             gtag('config', 'G-NSL8D1BTBG');
           `}
         </Script>
+         <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Syena Kitchenconceptz Manufacturing Pvt. Ltd.",
+      "image": [
+        "https://elina.frappe.cloud/files/product-1-1.png",
+        "https://elina.frappe.cloud/files/product-16-9.png",
+        "https://elina.frappe.cloud/files/product-4-3.png"
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Ground Floor, 108, 7th Mile Hosur Rd, Chikka Begur, Industrial Layout, Garvebhavi Palya,",
+        "addressLocality": "Bengaluru",
+        "addressRegion": "Karnataka",
+        "postalCode": "560068",
+        "addressCountry": "India"
+      },
+      "review": {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": 4,
+          "bestRating": 5
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Priya Sharma"
+        }
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 12.8882292,
+        "longitude": 77.638814
+      },
+      "url": "https://elina.so",
+      "telephone": "+919845447744",
+      "priceRange": "₹₹₹",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+          ],
+          "opens": "09:30",
+          "closes": "18:30"
+        }
+      ]
+    })}
+  </script>
       </head>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light">
