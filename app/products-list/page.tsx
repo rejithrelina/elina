@@ -1,12 +1,14 @@
 "use client"
 import { useState, useEffect } from "react"
+import type React from "react"
+
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight, Package } from "lucide-react"
 
 const API_URL = "https://elina.frappe.cloud/api"
 const AUTH_HEADER = {
-  Authorization: `token  9403214475f834f:df3e2e8bfee05db`,
+  Authorization: `token 9403214475f834f:df3e2e8bfee05db`,
   "Content-Type": "application/json",
 }
 
@@ -24,6 +26,10 @@ interface ApiResponse {
   data: Product[]
 }
 
+interface CountResponse {
+  message: number
+}
+
 export default function ProductsListPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
@@ -31,14 +37,50 @@ export default function ProductsListPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(20)
   const [totalItems, setTotalItems] = useState(0)
+  const [showOnlyWithImages, setShowOnlyWithImages] = useState(false)
 
-  const fetchProducts = async (page: number, limit: number) => {
+  // Fetch total count of items
+  const fetchTotalCount = async (withImagesOnly = false) => {
+    try {
+      let url = `${API_URL}/method/frappe.client.get_count?doctype=Item`
+
+      if (withImagesOnly) {
+        url += `&filters=[["image","!=",""]]`
+      }
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: AUTH_HEADER,
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data: CountResponse = await response.json()
+      return data.message
+    } catch (err) {
+      console.error("Error fetching count:", err)
+      return 0
+    }
+  }
+
+  const fetchProducts = async (page: number, limit: number, withImagesOnly = false) => {
     setLoading(true)
     setError(null)
 
     try {
-      const limitStart = (page - 1) * limit + 1
-      const url = `${API_URL}/resource/Item?fields=["item_code","item_name","item_group","description","stock_uom","standard_rate","image"]&limit_start=${limitStart}&limit_page_length=${limit}`
+      // First get the total count
+      const count = await fetchTotalCount(withImagesOnly)
+      setTotalItems(count)
+
+      // Then fetch the products
+      const limitStart = (page - 1) * limit
+      let url = `${API_URL}/resource/Item?fields=["item_code","item_name","item_group","description","stock_uom","standard_rate","image"]&limit_start=${limitStart}&limit_page_length=${limit}`
+
+      if (withImagesOnly) {
+        url += `&filters=[["image","!=",""]]`
+      }
 
       const response = await fetch(url, {
         method: "GET",
@@ -51,14 +93,6 @@ export default function ProductsListPage() {
 
       const data: ApiResponse = await response.json()
       setProducts(data.data || [])
-
-      // Note: You might need to make a separate API call to get total count
-      // For now, we'll estimate based on the returned data
-      if (data.data && data.data.length < limit && page === 1) {
-        setTotalItems(data.data.length)
-      } else {
-        setTotalItems(page * limit) // This is an estimate
-      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to fetch products")
       setProducts([])
@@ -68,8 +102,8 @@ export default function ProductsListPage() {
   }
 
   useEffect(() => {
-    fetchProducts(currentPage, itemsPerPage)
-  }, [currentPage, itemsPerPage])
+    fetchProducts(currentPage, itemsPerPage, showOnlyWithImages)
+  }, [currentPage, itemsPerPage, showOnlyWithImages])
 
   const totalPages = Math.ceil(totalItems / itemsPerPage)
 
@@ -84,7 +118,12 @@ export default function ProductsListPage() {
     setCurrentPage(1) // Reset to first page when changing items per page
   }
 
-  if (loading) {
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setShowOnlyWithImages(e.target.checked)
+    setCurrentPage(1) // Reset to first page when changing filter
+  }
+
+  if (loading && currentPage === 1) {
     return (
       <main className="min-h-screen py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -103,7 +142,10 @@ export default function ProductsListPage() {
           <div className="text-center">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">Error Loading Products</h1>
             <p className="text-red-600 mb-4">{error}</p>
-            <Button onClick={() => fetchProducts(currentPage, itemsPerPage)} className="bg-red-600 hover:bg-red-700">
+            <Button
+              onClick={() => fetchProducts(currentPage, itemsPerPage, showOnlyWithImages)}
+              className="bg-red-600 hover:bg-red-700"
+            >
               Try Again
             </Button>
           </div>
@@ -125,24 +167,49 @@ export default function ProductsListPage() {
 
         {/* Controls */}
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-gray-700">Items per page:</label>
-            <select
-              value={itemsPerPage}
-              onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
-              className="px-3 py-1 border border-gray-300 rounded focus:ring-red-500 focus:border-red-500"
-            >
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-              <option value={50}>50</option>
-              <option value={100}>100</option>
-            </select>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium text-gray-700">Items per page:</label>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+                className="px-3 py-1 border border-gray-300 rounded focus:ring-red-500 focus:border-red-500"
+              >
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="showWithImages"
+                checked={showOnlyWithImages}
+                onChange={handleFilterChange}
+                className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+              />
+              <label htmlFor="showWithImages" className="text-sm font-medium text-gray-700">
+                Show only products with images
+              </label>
+            </div>
           </div>
 
           <div className="text-sm text-gray-600">
-            Showing {products.length} products (Page {currentPage})
+            Showing {products.length} of {totalItems} products (Page {currentPage} of {totalPages || 1})
           </div>
         </div>
+
+        {/* Loading overlay for page changes */}
+        {loading && currentPage > 1 && (
+          <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+            <div className="bg-white p-4 rounded-lg shadow-lg flex items-center gap-3">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-red-600"></div>
+              <span>Loading...</span>
+            </div>
+          </div>
+        )}
 
         {/* Products Grid */}
         {products.length === 0 ? (
@@ -217,7 +284,12 @@ export default function ProductsListPage() {
               <div className="flex items-center gap-1">
                 {/* Show page numbers */}
                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  const pageNum = Math.max(1, currentPage - 2) + i
+                  // Calculate page numbers to show around current page
+                  let startPage = Math.max(1, currentPage - 2)
+                  if (currentPage > totalPages - 2) {
+                    startPage = Math.max(1, totalPages - 4)
+                  }
+                  const pageNum = startPage + i
                   if (pageNum > totalPages) return null
 
                   return (
@@ -238,7 +310,7 @@ export default function ProductsListPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => handlePageChange(currentPage + 1)}
-                disabled={products.length < itemsPerPage}
+                disabled={currentPage >= totalPages}
                 className="flex items-center gap-1"
               >
                 Next
