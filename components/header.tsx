@@ -54,7 +54,7 @@ export default function Header() {
                     Commercial Equipment
                   </Link>
                 </DropdownMenuItem>
-               
+
                 <DropdownMenuItem>
                   <Link href="/products/custom" className="w-full">
                     Custom Projects
@@ -71,11 +71,16 @@ export default function Header() {
             <Link href="/contact" className="text-gray-700 hover:text-red-600 font-medium transition-colors">
               Contact
             </Link>
+            <Link href="/products-list" className="text-gray-700 hover:text-red-600 font-medium transition-colors">
+              Products List
+            </Link>
+            <Link href="/contact/form" className="text-gray-700 hover:text-red-600 font-medium transition-colors">
+              Contact Form
+            </Link>
           </nav>
 
           {/* Action Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-           
             <Button className="bg-red-600 hover:bg-red-700 text-white" onClick={openQuoteModal}>
               Request Quote
             </Button>
@@ -132,7 +137,7 @@ export default function Header() {
                   >
                     Commercial Equipment
                   </Link>
-                  
+
                   <Link
                     href="/products/custom"
                     className="text-gray-600 hover:text-red-600 transition-colors block py-1"
@@ -162,6 +167,20 @@ export default function Header() {
                 onClick={toggleMenu}
               >
                 Contact
+              </Link>
+              <Link
+                href="/products-list"
+                className="text-gray-700 hover:text-red-600 font-medium transition-colors py-2"
+                onClick={toggleMenu}
+              >
+                Products List
+              </Link>
+              <Link
+                href="/contact/form"
+                className="text-gray-700 hover:text-red-600 font-medium transition-colors py-2"
+                onClick={toggleMenu}
+              >
+                Contact Form
               </Link>
               <div className="pt-4 border-t border-gray-100">
                 <Button
