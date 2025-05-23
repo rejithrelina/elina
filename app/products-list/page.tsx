@@ -228,7 +228,7 @@ export default function ProductsListPage() {
                 <div className="relative h-48 w-full bg-gray-100">
                   {product.image ? (
                     <Image
-                      src={product.image || "/placeholder.svg"}
+                      src={"https://elina.frappe.cloud" + product.image || "/placeholder.svg"}
                       alt={product.item_name}
                       fill
                       className="object-cover"
