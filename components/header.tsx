@@ -72,7 +72,7 @@ export default function Header() {
               Contact
             </Link>
             <Link href="/products-list" className="text-gray-700 hover:text-red-600 font-medium transition-colors">
-              Products List
+              Products Catalog
             </Link>
             <Link href="/contact/form" className="text-gray-700 hover:text-red-600 font-medium transition-colors">
               Contact Form
@@ -173,7 +173,7 @@ export default function Header() {
                 className="text-gray-700 hover:text-red-600 font-medium transition-colors py-2"
                 onClick={toggleMenu}
               >
-                Products List
+                Products Catalog
               </Link>
               <Link
                 href="/contact/form"

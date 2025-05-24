@@ -235,8 +235,8 @@ export const companyInfo = {
     country: "India",
   },
   phone: {
-    main: "+91 80 1234 5678",
-    sales: "+91 98765 43210",
+    main: "+91 80 4178 4630",
+    sales: "+91 98454 47744",
   },
   email: {
     info: "info@elina.so",
@@ -247,9 +247,10 @@ export const companyInfo = {
     weekend: "Sunday: Closed",
   },
   social: {
-    facebook: "https://facebook.com",
+    facebook: "https://www.facebook.com/elina.so.official/",
     twitter: "https://twitter.com",
-    instagram: "https://instagram.com",
-    linkedin: "https://linkedin.com",
+    instagram: "https://www.instagram.com/elina.soblr/",
+    linkedin: "https://www.linkedin.com/company/elina-so/",
+    youtube: "",
   },
 }

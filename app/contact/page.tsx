@@ -1,6 +1,7 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { useQuoteModal } from "@/context/quote-modal-context"
+import { companyInfo } from "@/lib/data"
 
 export default function ContactPage() {
   const { openQuoteModal } = useQuoteModal()
@@ -60,15 +61,15 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-semibold text-gray-900">Address</h3>
                     <p className="text-gray-700">
-                      Syena Kitchenconceptz Manufacturing Pvt. Ltd.
+                      {companyInfo.name}
                       <br />
-                      Ground Floor, 108, 7th Mile Hosur Rd, Chikka Begur,
+                      {companyInfo.address.line1}
                       <br />
-                      Industrial Layout, Garvebhavi Palya,
+                      {companyInfo.address.line2}
                       <br />
-                      Bengaluru, Karnataka 560068
+                      {companyInfo.address.city}, {companyInfo.address.state} {companyInfo.address.zip}
                       <br />
-                      India
+                      {companyInfo.address.country}
                     </p>
                   </div>
                 </div>
@@ -90,8 +91,8 @@ export default function ContactPage() {
                   </svg>
                   <div>
                     <h3 className="font-semibold text-gray-900">Phone</h3>
-                    <p className="text-gray-700">+91 9845447744</p>
-                    <p className="text-gray-700">+91 98765 43210 (Sales)</p>
+                    <p className="text-gray-700">{companyInfo.phone.main}</p>
+                    <p className="text-gray-700">{companyInfo.phone.sales} (Sales)</p>
                   </div>
                 </div>
 
@@ -112,8 +113,8 @@ export default function ContactPage() {
                   </svg>
                   <div>
                     <h3 className="font-semibold text-gray-900">Email</h3>
-                    <p className="text-gray-700">info@elina.so</p>
-                    <p className="text-gray-700">sales@elina.so</p>
+                    <p className="text-gray-700">{companyInfo.email.info}</p>
+                    <p className="text-gray-700">{companyInfo.email.sales}</p>
                   </div>
                 </div>
 
@@ -135,9 +136,9 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-semibold text-gray-900">Business Hours</h3>
                     <p className="text-gray-700">
-                      Monday - Saturday: 9:30 AM - 6:30 PM
+                      {companyInfo.hours.weekdays}
                       <br />
-                      Sunday: Closed
+                      {companyInfo.hours.weekend}
                     </p>
                   </div>
                 </div>

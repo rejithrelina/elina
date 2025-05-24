@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import FeatureCard from "@/components/feature-card"
 import TestimonialCard from "@/components/testimonial-card"
 import ProductCard from "@/components/product-card"
-import { products, features, testimonials } from "@/lib/data"
+import { products, features, testimonials, companyInfo } from "@/lib/data"
 import { useQuoteModal } from "@/context/quote-modal-context"
 
 export default function Home() {
@@ -198,7 +198,7 @@ function ContactInfo() {
         </svg>
         <div>
           <h3 className="font-semibold text-gray-900">Phone</h3>
-          <p className="text-gray-700">+91 98454 47744</p>
+          <p className="text-gray-700">{companyInfo.phone.sales}</p>
         </div>
       </div>
 
@@ -219,7 +219,7 @@ function ContactInfo() {
         </svg>
         <div>
           <h3 className="font-semibold text-gray-900">Email</h3>
-          <p className="text-gray-700">info@syenakitchenconceptz.com</p>
+          <p className="text-gray-700">{companyInfo.email.info}</p>
         </div>
       </div>
 
@@ -241,7 +241,9 @@ function ContactInfo() {
         </svg>
         <div>
           <h3 className="font-semibold text-gray-900">Address</h3>
-          <p className="text-gray-700">Bangalore, Karnataka, India</p>
+          <p className="text-gray-700">
+            {companyInfo.address.city}, {companyInfo.address.state}, {companyInfo.address.country}
+          </p>
         </div>
       </div>
 
@@ -262,10 +264,7 @@ function ContactInfo() {
         </svg>
         <div>
           <h3 className="font-semibold text-gray-900">Business Hours</h3>
-          <p className="text-gray-700">
-            Monday - Saturday: 9:30 AM - 6:30 PM
-           
-          </p>
+          <p className="text-gray-700">{companyInfo.hours.weekdays}</p>
         </div>
       </div>
     </div>

@@ -1,10 +1,12 @@
 "use client"
 import { useState, useEffect } from "react"
 import type React from "react"
-
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, Package } from "lucide-react"
+import { ChevronLeft, ChevronRight, Package, ShoppingCart, Plus } from "lucide-react"
+import { useCart } from "@/context/cart-context"
+import CartModal from "@/components/cart-modal"
+import CartCheckoutModal from "@/components/cart-checkout-modal"
 
 const API_URL = "https://elina.frappe.cloud/api"
 const AUTH_HEADER = {
@@ -38,6 +40,9 @@ export default function ProductsListPage() {
   const [itemsPerPage, setItemsPerPage] = useState(20)
   const [totalItems, setTotalItems] = useState(0)
   const [showOnlyWithImages, setShowOnlyWithImages] = useState(false)
+  const { addToCart, getTotalItems } = useCart()
+  const [isCartModalOpen, setIsCartModalOpen] = useState(false)
+  const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false)
 
   // Fetch total count of items
   const fetchTotalCount = async (withImagesOnly = false) => {
@@ -123,6 +128,23 @@ export default function ProductsListPage() {
     setCurrentPage(1) // Reset to first page when changing filter
   }
 
+  const handleAddToCart = (product: Product) => {
+    addToCart({
+      item_code: product.item_code,
+      item_name: product.item_name,
+      item_group: product.item_group,
+      description: product.description,
+      stock_uom: product.stock_uom,
+      standard_rate: product.standard_rate,
+      image: product.image,
+    })
+  }
+
+  const handleCheckout = () => {
+    setIsCartModalOpen(false)
+    setIsCheckoutModalOpen(true)
+  }
+
   if (loading && currentPage === 1) {
     return (
       <main className="min-h-screen py-20">
@@ -196,8 +218,17 @@ export default function ProductsListPage() {
             </div>
           </div>
 
-          <div className="text-sm text-gray-600">
-            Showing {products.length} of {totalItems} products (Page {currentPage} of {totalPages || 1})
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={() => setIsCartModalOpen(true)}
+              className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
+            >
+              <ShoppingCart className="h-4 w-4" />
+              Cart ({getTotalItems()})
+            </Button>
+            <div className="text-sm text-gray-600">
+              Showing {products.length} of {totalItems} products (Page {currentPage} of {totalPages || 1})
+            </div>
           </div>
         </div>
 
@@ -251,7 +282,7 @@ export default function ProductsListPage() {
                   {product.description && (
                     <p className="text-sm text-gray-700 mb-3 line-clamp-3">{product.description}</p>
                   )}
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center mb-3">
                     <div className="text-sm text-gray-600">
                       <span className="font-medium">UOM:</span> {product.stock_uom}
                     </div>
@@ -259,7 +290,13 @@ export default function ProductsListPage() {
                       <div className="text-lg font-bold text-red-600">₹{product.standard_rate.toLocaleString()}</div>
                     )}
                   </div>
-                  <Button className="w-full mt-3 bg-red-600 hover:bg-red-700 text-white">View Details</Button>
+                  <Button
+                    className="w-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2"
+                    onClick={() => handleAddToCart(product)}
+                  >
+                    <Plus className="h-4 w-4" />
+                    Add to Cart
+                  </Button>
                 </div>
               </div>
             ))}
@@ -324,6 +361,12 @@ export default function ProductsListPage() {
           </div>
         )}
       </div>
+
+      {/* Cart Modal */}
+      <CartModal isOpen={isCartModalOpen} onClose={() => setIsCartModalOpen(false)} onCheckout={handleCheckout} />
+
+      {/* Checkout Modal */}
+      <CartCheckoutModal isOpen={isCheckoutModalOpen} onClose={() => setIsCheckoutModalOpen(false)} />
     </main>
   )
 }
