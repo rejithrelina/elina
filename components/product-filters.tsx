@@ -264,7 +264,7 @@ export default function ProductFilters({ onFiltersChange, isOpen, onToggle }: Pr
 
       {/* Filter Content */}
       {isOpen && (
-        <div className="p-4 max-h-96 overflow-y-auto">
+        <div className="p-4 max-h-screen overflow-y-auto">
           <div className="space-y-4">
             {attributes.map((attribute) => (
               <div key={attribute.attribute_name} className="border-b border-gray-100 pb-4 last:border-b-0">

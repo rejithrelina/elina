@@ -8,6 +8,7 @@ import FeatureCard from "@/components/feature-card"
 import TestimonialCard from "@/components/testimonial-card"
 import ProductCard from "@/components/product-card"
 import { products, features, testimonials, companyInfo } from "@/lib/data"
+
 import { useQuoteModal } from "@/context/quote-modal-context"
 
 export default function Home() {

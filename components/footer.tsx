@@ -185,7 +185,15 @@ export default function Footer() {
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              &copy; {new Date().getFullYear()} {companyInfo.name}. All rights reserved.
+              &copy; {new Date().getFullYear()} {companyInfo.name}. All rights reserved || Designed By:{" "}
+              <a
+                href="https://github.com/axelgear"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-gray-300"
+              >
+                Rejith
+              </a>.
             </p>
             <div className="mt-4 md:mt-0">
               <ul className="flex space-x-6 text-sm text-gray-400">

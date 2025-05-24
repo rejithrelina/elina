@@ -134,7 +134,7 @@ export default function CartCheckoutModal({ isOpen, onClose }: CartCheckoutModal
       if (noteAdded) {
         setSubmitResult({
           success: true,
-          message: `Your quote request has been submitted with Lead ID: ${leadId}. We'll get back to you soon with pricing for your selected items!`,
+          message: `Your quote request has been submitted with ID: ${leadId}. We'll get back to you soon with pricing for your selected items!`,
         })
 
         // Clear the cart and form

@@ -100,7 +100,7 @@ export default function TermsOfServicePage() {
               <br />
               Email: info@elina.so
               <br />
-              Phone: +91 80 1234 5678
+              Phone: +91 80 4178 4630
             </p>
           </div>
         </div>
