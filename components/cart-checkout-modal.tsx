@@ -53,14 +53,14 @@ export default function CartCheckoutModal({ isOpen, onClose }: CartCheckoutModal
       const now = new Date().toISOString().slice(0, 19).replace("T", " ")
       const note = {
         name: 1,
-        owner: "system@elina.so",
+        owner: "rejith@elina.so",
         creation: now,
         modified: now,
-        modified_by: "system@elina.so",
+        modified_by: "rejith@elina.so",
         docstatus: 0,
         idx: 1,
         note: generateCartNote(),
-        added_by: "system@elina.so",
+        added_by: "rejith@elina.so",
         added_on: now,
         parent: leadId,
         parentfield: "notes",
