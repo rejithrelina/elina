@@ -6,10 +6,13 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useQuoteModal } from "@/context/quote-modal-context"
+import { useCart } from "@/context/cart-context"
+import { ShoppingCart } from "lucide-react"
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { openQuoteModal } = useQuoteModal()
+  const { getTotalItems } = useCart()
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -54,7 +57,6 @@ export default function Header() {
                     Commercial Equipment
                   </Link>
                 </DropdownMenuItem>
-
                 <DropdownMenuItem>
                   <Link href="/products/custom" className="w-full">
                     Custom Projects
@@ -74,20 +76,41 @@ export default function Header() {
             <Link href="/products-list" className="text-gray-700 hover:text-red-600 font-medium transition-colors">
               Products Catalog
             </Link>
-            <Link href="/contact/form" className="text-gray-700 hover:text-red-600 font-medium transition-colors">
-              Contact Form
-            </Link>
           </nav>
 
           {/* Action Buttons */}
           <div className="hidden md:flex items-center space-x-4">
+            {/* Cart Icon */}
+            <Link href="/products-list" className="relative">
+              <Button variant="ghost" size="icon" className="relative">
+                <ShoppingCart className="h-5 w-5 text-gray-700" />
+                {getTotalItems() > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {getTotalItems()}
+                  </span>
+                )}
+              </Button>
+            </Link>
+
             <Button className="bg-red-600 hover:bg-red-700 text-white" onClick={openQuoteModal}>
               Request Quote
             </Button>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-2">
+            {/* Mobile Cart Icon */}
+            <Link href="/products-list" className="relative">
+              <Button variant="ghost" size="icon" className="relative">
+                <ShoppingCart className="h-5 w-5 text-gray-700" />
+                {getTotalItems() > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {getTotalItems()}
+                  </span>
+                )}
+              </Button>
+            </Link>
+
             <Button variant="ghost" size="icon" onClick={toggleMenu}>
               {isMenuOpen ? (
                 <svg
@@ -137,7 +160,6 @@ export default function Header() {
                   >
                     Commercial Equipment
                   </Link>
-
                   <Link
                     href="/products/custom"
                     className="text-gray-600 hover:text-red-600 transition-colors block py-1"
@@ -175,13 +197,7 @@ export default function Header() {
               >
                 Products Catalog
               </Link>
-              <Link
-                href="/contact/form"
-                className="text-gray-700 hover:text-red-600 font-medium transition-colors py-2"
-                onClick={toggleMenu}
-              >
-                Contact Form
-              </Link>
+
               <div className="pt-4 border-t border-gray-100">
                 <Button
                   className="w-full bg-red-600 hover:bg-red-700 text-white"

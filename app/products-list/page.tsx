@@ -1,9 +1,9 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import type React from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, Package, ShoppingCart, Plus } from "lucide-react"
+import { ChevronLeft, ChevronRight, Package, ShoppingCart, Plus, Search, X } from "lucide-react"
 import { useCart } from "@/context/cart-context"
 import CartModal from "@/components/cart-modal"
 import CartCheckoutModal from "@/components/cart-checkout-modal"
@@ -40,17 +40,50 @@ export default function ProductsListPage() {
   const [itemsPerPage, setItemsPerPage] = useState(20)
   const [totalItems, setTotalItems] = useState(0)
   const [showOnlyWithImages, setShowOnlyWithImages] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [searchInput, setSearchInput] = useState("")
   const { addToCart, getTotalItems } = useCart()
   const [isCartModalOpen, setIsCartModalOpen] = useState(false)
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false)
 
+  // Debounce search to avoid too many API calls
+  const debounceSearch = useCallback((query: string) => {
+    const timer = setTimeout(() => {
+      setSearchQuery(query)
+      setCurrentPage(1) // Reset to first page when searching
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    const cleanup = debounceSearch(searchInput)
+    return cleanup
+  }, [searchInput, debounceSearch])
+
+  // Build filters array for API
+  const buildFilters = (withImagesOnly: boolean, search: string) => {
+    const filters: any[] = []
+
+    if (withImagesOnly) {
+      filters.push(["image", "!=", ""])
+    }
+
+    if (search.trim()) {
+      // Search in item_name, item_code, and description
+      filters.push(["item_name", "like", `%${search.trim()}%`])
+    }
+
+    return filters
+  }
+
   // Fetch total count of items
-  const fetchTotalCount = async (withImagesOnly = false) => {
+  const fetchTotalCount = async (withImagesOnly = false, search = "") => {
     try {
       let url = `${API_URL}/method/frappe.client.get_count?doctype=Item`
 
-      if (withImagesOnly) {
-        url += `&filters=[["image","!=",""]]`
+      const filters = buildFilters(withImagesOnly, search)
+      if (filters.length > 0) {
+        url += `&filters=${encodeURIComponent(JSON.stringify(filters))}`
       }
 
       const response = await fetch(url, {
@@ -70,21 +103,22 @@ export default function ProductsListPage() {
     }
   }
 
-  const fetchProducts = async (page: number, limit: number, withImagesOnly = false) => {
+  const fetchProducts = async (page: number, limit: number, withImagesOnly = false, search = "") => {
     setLoading(true)
     setError(null)
 
     try {
       // First get the total count
-      const count = await fetchTotalCount(withImagesOnly)
+      const count = await fetchTotalCount(withImagesOnly, search)
       setTotalItems(count)
 
       // Then fetch the products
       const limitStart = (page - 1) * limit
       let url = `${API_URL}/resource/Item?fields=["item_code","item_name","item_group","description","stock_uom","standard_rate","image"]&limit_start=${limitStart}&limit_page_length=${limit}`
 
-      if (withImagesOnly) {
-        url += `&filters=[["image","!=",""]]`
+      const filters = buildFilters(withImagesOnly, search)
+      if (filters.length > 0) {
+        url += `&filters=${encodeURIComponent(JSON.stringify(filters))}`
       }
 
       const response = await fetch(url, {
@@ -107,8 +141,8 @@ export default function ProductsListPage() {
   }
 
   useEffect(() => {
-    fetchProducts(currentPage, itemsPerPage, showOnlyWithImages)
-  }, [currentPage, itemsPerPage, showOnlyWithImages])
+    fetchProducts(currentPage, itemsPerPage, showOnlyWithImages, searchQuery)
+  }, [currentPage, itemsPerPage, showOnlyWithImages, searchQuery])
 
   const totalPages = Math.ceil(totalItems / itemsPerPage)
 
@@ -128,6 +162,15 @@ export default function ProductsListPage() {
     setCurrentPage(1) // Reset to first page when changing filter
   }
 
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value)
+  }
+
+  const clearSearch = () => {
+    setSearchInput("")
+    setSearchQuery("")
+  }
+
   const handleAddToCart = (product: Product) => {
     addToCart({
       item_code: product.item_code,
@@ -145,7 +188,7 @@ export default function ProductsListPage() {
     setIsCheckoutModalOpen(true)
   }
 
-  if (loading && currentPage === 1) {
+  if (loading && currentPage === 1 && !searchQuery) {
     return (
       <main className="min-h-screen py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -165,7 +208,7 @@ export default function ProductsListPage() {
             <h1 className="text-4xl font-bold text-gray-900 mb-4">Error Loading Products</h1>
             <p className="text-red-600 mb-4">{error}</p>
             <Button
-              onClick={() => fetchProducts(currentPage, itemsPerPage, showOnlyWithImages)}
+              onClick={() => fetchProducts(currentPage, itemsPerPage, showOnlyWithImages, searchQuery)}
               className="bg-red-600 hover:bg-red-700"
             >
               Try Again
@@ -185,6 +228,32 @@ export default function ProductsListPage() {
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Browse our complete catalog of kitchen equipment and products
           </p>
+        </div>
+
+        {/* Search Bar */}
+        <div className="max-w-2xl mx-auto mb-8">
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search products by name, code, or description..."
+              value={searchInput}
+              onChange={handleSearchInputChange}
+              className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 text-lg"
+            />
+            {searchInput && (
+              <button onClick={clearSearch} className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <X className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+              </button>
+            )}
+          </div>
+          {searchQuery && (
+            <p className="mt-2 text-sm text-gray-600">
+              Searching for: "<span className="font-medium">{searchQuery}</span>"
+            </p>
+          )}
         </div>
 
         {/* Controls */}
@@ -233,7 +302,7 @@ export default function ProductsListPage() {
         </div>
 
         {/* Loading overlay for page changes */}
-        {loading && currentPage > 1 && (
+        {loading && (currentPage > 1 || searchQuery) && (
           <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
             <div className="bg-white p-4 rounded-lg shadow-lg flex items-center gap-3">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-red-600"></div>
@@ -246,8 +315,19 @@ export default function ProductsListPage() {
         {products.length === 0 ? (
           <div className="text-center py-12">
             <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No products found</h3>
-            <p className="text-gray-600">Try adjusting your search or check back later.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              {searchQuery ? "No products found" : "No products available"}
+            </h3>
+            <p className="text-gray-600">
+              {searchQuery
+                ? `No products match your search for "${searchQuery}". Try different keywords.`
+                : "Try adjusting your filters or check back later."}
+            </p>
+            {searchQuery && (
+              <Button onClick={clearSearch} variant="outline" className="mt-4">
+                Clear Search
+              </Button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
