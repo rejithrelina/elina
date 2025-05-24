@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, Package, ShoppingCart, Plus, Search, X } fro
 import { useCart } from "@/context/cart-context"
 import CartModal from "@/components/cart-modal"
 import CartCheckoutModal from "@/components/cart-checkout-modal"
+import ProductFilters from "@/components/product-filters"
 
 const API_URL = "https://elina.frappe.cloud/api"
 const AUTH_HEADER = {
@@ -32,6 +33,12 @@ interface CountResponse {
   message: number
 }
 
+interface FilterValue {
+  attribute: string
+  value: string | number
+  operator: string
+}
+
 export default function ProductsListPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
@@ -42,6 +49,8 @@ export default function ProductsListPage() {
   const [showOnlyWithImages, setShowOnlyWithImages] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [searchInput, setSearchInput] = useState("")
+  const [attributeFilters, setAttributeFilters] = useState<FilterValue[]>([])
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false)
   const { addToCart, getTotalItems } = useCart()
   const [isCartModalOpen, setIsCartModalOpen] = useState(false)
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false)
@@ -61,7 +70,7 @@ export default function ProductsListPage() {
   }, [searchInput, debounceSearch])
 
   // Build filters array for API
-  const buildFilters = (withImagesOnly: boolean, search: string) => {
+  const buildFilters = (withImagesOnly: boolean, search: string, attrFilters: FilterValue[]) => {
     const filters: any[] = []
 
     if (withImagesOnly) {
@@ -73,15 +82,20 @@ export default function ProductsListPage() {
       filters.push(["item_name", "like", `%${search.trim()}%`])
     }
 
+    // Add attribute filters
+    attrFilters.forEach((filter) => {
+      filters.push([filter.attribute, filter.operator, filter.value])
+    })
+
     return filters
   }
 
   // Fetch total count of items
-  const fetchTotalCount = async (withImagesOnly = false, search = "") => {
+  const fetchTotalCount = async (withImagesOnly = false, search = "", attrFilters: FilterValue[] = []) => {
     try {
       let url = `${API_URL}/method/frappe.client.get_count?doctype=Item`
 
-      const filters = buildFilters(withImagesOnly, search)
+      const filters = buildFilters(withImagesOnly, search, attrFilters)
       if (filters.length > 0) {
         url += `&filters=${encodeURIComponent(JSON.stringify(filters))}`
       }
@@ -103,20 +117,26 @@ export default function ProductsListPage() {
     }
   }
 
-  const fetchProducts = async (page: number, limit: number, withImagesOnly = false, search = "") => {
+  const fetchProducts = async (
+    page: number,
+    limit: number,
+    withImagesOnly = false,
+    search = "",
+    attrFilters: FilterValue[] = [],
+  ) => {
     setLoading(true)
     setError(null)
 
     try {
       // First get the total count
-      const count = await fetchTotalCount(withImagesOnly, search)
+      const count = await fetchTotalCount(withImagesOnly, search, attrFilters)
       setTotalItems(count)
 
       // Then fetch the products
       const limitStart = (page - 1) * limit
       let url = `${API_URL}/resource/Item?fields=["item_code","item_name","item_group","description","stock_uom","standard_rate","image"]&limit_start=${limitStart}&limit_page_length=${limit}`
 
-      const filters = buildFilters(withImagesOnly, search)
+      const filters = buildFilters(withImagesOnly, search, attrFilters)
       if (filters.length > 0) {
         url += `&filters=${encodeURIComponent(JSON.stringify(filters))}`
       }
@@ -141,8 +161,8 @@ export default function ProductsListPage() {
   }
 
   useEffect(() => {
-    fetchProducts(currentPage, itemsPerPage, showOnlyWithImages, searchQuery)
-  }, [currentPage, itemsPerPage, showOnlyWithImages, searchQuery])
+    fetchProducts(currentPage, itemsPerPage, showOnlyWithImages, searchQuery, attributeFilters)
+  }, [currentPage, itemsPerPage, showOnlyWithImages, searchQuery, attributeFilters])
 
   const totalPages = Math.ceil(totalItems / itemsPerPage)
 
@@ -171,6 +191,11 @@ export default function ProductsListPage() {
     setSearchQuery("")
   }
 
+  const handleAttributeFiltersChange = (filters: FilterValue[]) => {
+    setAttributeFilters(filters)
+    setCurrentPage(1) // Reset to first page when changing filters
+  }
+
   const handleAddToCart = (product: Product) => {
     addToCart({
       item_code: product.item_code,
@@ -188,7 +213,9 @@ export default function ProductsListPage() {
     setIsCheckoutModalOpen(true)
   }
 
-  if (loading && currentPage === 1 && !searchQuery) {
+  const hasActiveFilters = showOnlyWithImages || searchQuery || attributeFilters.length > 0
+
+  if (loading && currentPage === 1 && !searchQuery && attributeFilters.length === 0) {
     return (
       <main className="min-h-screen py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -208,7 +235,9 @@ export default function ProductsListPage() {
             <h1 className="text-4xl font-bold text-gray-900 mb-4">Error Loading Products</h1>
             <p className="text-red-600 mb-4">{error}</p>
             <Button
-              onClick={() => fetchProducts(currentPage, itemsPerPage, showOnlyWithImages, searchQuery)}
+              onClick={() =>
+                fetchProducts(currentPage, itemsPerPage, showOnlyWithImages, searchQuery, attributeFilters)
+              }
               className="bg-red-600 hover:bg-red-700"
             >
               Try Again
@@ -230,216 +259,265 @@ export default function ProductsListPage() {
           </p>
         </div>
 
-        {/* Search Bar */}
-        <div className="max-w-2xl mx-auto mb-8">
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-gray-400" />
-            </div>
-            <input
-              type="text"
-              placeholder="Search products by name, code, or description..."
-              value={searchInput}
-              onChange={handleSearchInputChange}
-              className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 text-lg"
-            />
-            {searchInput && (
-              <button onClick={clearSearch} className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                <X className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-              </button>
-            )}
-          </div>
-          {searchQuery && (
-            <p className="mt-2 text-sm text-gray-600">
-              Searching for: "<span className="font-medium">{searchQuery}</span>"
-            </p>
-          )}
-        </div>
-
-        {/* Controls */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-gray-700">Items per page:</label>
-              <select
-                value={itemsPerPage}
-                onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
-                className="px-3 py-1 border border-gray-300 rounded focus:ring-red-500 focus:border-red-500"
-              >
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-              </select>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="showWithImages"
-                checked={showOnlyWithImages}
-                onChange={handleFilterChange}
-                className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Filters Sidebar */}
+          <div className="lg:w-1/4">
+            <div className="sticky top-24">
+              <ProductFilters
+                onFiltersChange={handleAttributeFiltersChange}
+                isOpen={isFiltersOpen}
+                onToggle={() => setIsFiltersOpen(!isFiltersOpen)}
               />
-              <label htmlFor="showWithImages" className="text-sm font-medium text-gray-700">
-                Show only products with images
-              </label>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <Button
-              onClick={() => setIsCartModalOpen(true)}
-              className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
-            >
-              <ShoppingCart className="h-4 w-4" />
-              Cart ({getTotalItems()})
-            </Button>
-            <div className="text-sm text-gray-600">
-              Showing {products.length} of {totalItems} products (Page {currentPage} of {totalPages || 1})
-            </div>
-          </div>
-        </div>
-
-        {/* Loading overlay for page changes */}
-        {loading && (currentPage > 1 || searchQuery) && (
-          <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-            <div className="bg-white p-4 rounded-lg shadow-lg flex items-center gap-3">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-red-600"></div>
-              <span>Loading...</span>
-            </div>
-          </div>
-        )}
-
-        {/* Products Grid */}
-        {products.length === 0 ? (
-          <div className="text-center py-12">
-            <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              {searchQuery ? "No products found" : "No products available"}
-            </h3>
-            <p className="text-gray-600">
-              {searchQuery
-                ? `No products match your search for "${searchQuery}". Try different keywords.`
-                : "Try adjusting your filters or check back later."}
-            </p>
-            {searchQuery && (
-              <Button onClick={clearSearch} variant="outline" className="mt-4">
-                Clear Search
-              </Button>
-            )}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-            {products.map((product) => (
-              <div
-                key={product.item_code}
-                className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1"
-              >
-                <div className="relative h-48 w-full bg-gray-100">
-                  {product.image ? (
-                    <Image
-                      src={"https://elina.frappe.cloud" + product.image || "/placeholder.svg"}
-                      alt={product.item_name}
-                      fill
-                      className="object-cover"
-                      onError={(e) => {
-                        // Fallback to placeholder if image fails to load
-                        const target = e.target as HTMLImageElement
-                        target.src = "/placeholder.svg?height=200&width=300"
-                      }}
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full">
-                      <Package className="h-12 w-12 text-gray-400" />
-                    </div>
-                  )}
+          {/* Main Content */}
+          <div className="lg:w-3/4">
+            {/* Search Bar */}
+            <div className="mb-8">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search className="h-5 w-5 text-gray-400" />
                 </div>
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{product.item_name}</h3>
-                  <p className="text-sm text-gray-600 mb-2">Code: {product.item_code}</p>
-                  <p className="text-sm text-gray-600 mb-2">Group: {product.item_group}</p>
-                  {product.description && (
-                    <p className="text-sm text-gray-700 mb-3 line-clamp-3">{product.description}</p>
-                  )}
-                  <div className="flex justify-between items-center mb-3">
-                    <div className="text-sm text-gray-600">
-                      <span className="font-medium">UOM:</span> {product.stock_uom}
-                    </div>
-                    {product.standard_rate > 0 && (
-                      <div className="text-lg font-bold text-red-600">₹{product.standard_rate.toLocaleString()}</div>
-                    )}
-                  </div>
-                  <Button
-                    className="w-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2"
-                    onClick={() => handleAddToCart(product)}
+                <input
+                  type="text"
+                  placeholder="Search products by name, code, or description..."
+                  value={searchInput}
+                  onChange={handleSearchInputChange}
+                  className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 text-lg"
+                />
+                {searchInput && (
+                  <button onClick={clearSearch} className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    <X className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  </button>
+                )}
+              </div>
+              {searchQuery && (
+                <p className="mt-2 text-sm text-gray-600">
+                  Searching for: "<span className="font-medium">{searchQuery}</span>"
+                </p>
+              )}
+            </div>
+
+            {/* Controls */}
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <label className="text-sm font-medium text-gray-700">Items per page:</label>
+                  <select
+                    value={itemsPerPage}
+                    onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+                    className="px-3 py-1 border border-gray-300 rounded focus:ring-red-500 focus:border-red-500"
                   >
-                    <Plus className="h-4 w-4" />
-                    Add to Cart
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                    <option value={50}>50</option>
+                    <option value={100}>100</option>
+                  </select>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="showWithImages"
+                    checked={showOnlyWithImages}
+                    onChange={handleFilterChange}
+                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                  />
+                  <label htmlFor="showWithImages" className="text-sm font-medium text-gray-700">
+                    Show only products with images
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <Button
+                  onClick={() => setIsCartModalOpen(true)}
+                  className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
+                >
+                  <ShoppingCart className="h-4 w-4" />
+                  Cart ({getTotalItems()})
+                </Button>
+                <div className="text-sm text-gray-600">
+                  Showing {products.length} of {totalItems} products (Page {currentPage} of {totalPages || 1})
+                </div>
+              </div>
+            </div>
+
+            {/* Active Filters Summary */}
+            {hasActiveFilters && (
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-gray-700">
+                    Active filters: {(showOnlyWithImages ? 1 : 0) + (searchQuery ? 1 : 0) + attributeFilters.length}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setShowOnlyWithImages(false)
+                      clearSearch()
+                      setAttributeFilters([])
+                    }}
+                    className="text-red-600 hover:text-red-700"
+                  >
+                    Clear All Filters
                   </Button>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+            )}
 
-        {/* Pagination */}
-        {products.length > 0 && (
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="flex items-center gap-1"
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Previous
-              </Button>
-
-              <div className="flex items-center gap-1">
-                {/* Show page numbers */}
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  // Calculate page numbers to show around current page
-                  let startPage = Math.max(1, currentPage - 2)
-                  if (currentPage > totalPages - 2) {
-                    startPage = Math.max(1, totalPages - 4)
-                  }
-                  const pageNum = startPage + i
-                  if (pageNum > totalPages) return null
-
-                  return (
-                    <Button
-                      key={pageNum}
-                      variant={pageNum === currentPage ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => handlePageChange(pageNum)}
-                      className={pageNum === currentPage ? "bg-red-600 hover:bg-red-700" : ""}
-                    >
-                      {pageNum}
-                    </Button>
-                  )
-                })}
+            {/* Loading overlay for page changes */}
+            {loading && (currentPage > 1 || searchQuery || attributeFilters.length > 0) && (
+              <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+                <div className="bg-white p-4 rounded-lg shadow-lg flex items-center gap-3">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-red-600"></div>
+                  <span>Loading...</span>
+                </div>
               </div>
+            )}
 
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage >= totalPages}
-                className="flex items-center gap-1"
-              >
-                Next
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
+            {/* Products Grid */}
+            {products.length === 0 ? (
+              <div className="text-center py-12">
+                <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  {hasActiveFilters ? "No products found" : "No products available"}
+                </h3>
+                <p className="text-gray-600">
+                  {hasActiveFilters
+                    ? "No products match your current filters. Try adjusting your search or filters."
+                    : "Try adjusting your filters or check back later."}
+                </p>
+                {hasActiveFilters && (
+                  <Button
+                    onClick={() => {
+                      setShowOnlyWithImages(false)
+                      clearSearch()
+                      setAttributeFilters([])
+                    }}
+                    variant="outline"
+                    className="mt-4"
+                  >
+                    Clear All Filters
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                {products.map((product) => (
+                  <div
+                    key={product.item_code}
+                    className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1"
+                  >
+                    <div className="relative h-48 w-full bg-gray-100">
+                      {product.image ? (
+                        <Image
+                          src={"https://elina.frappe.cloud" + product.image || "/placeholder.svg"}
+                          alt={product.item_name}
+                          fill
+                          className="object-cover"
+                          onError={(e) => {
+                            // Fallback to placeholder if image fails to load
+                            const target = e.target as HTMLImageElement
+                            target.src = "/placeholder.svg?height=200&width=300"
+                          }}
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full">
+                          <Package className="h-12 w-12 text-gray-400" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{product.item_name}</h3>
+                      <p className="text-sm text-gray-600 mb-2">Code: {product.item_code}</p>
+                      <p className="text-sm text-gray-600 mb-2">Group: {product.item_group}</p>
+                      {product.description && (
+                        <p className="text-sm text-gray-700 mb-3 line-clamp-3">{product.description}</p>
+                      )}
+                      <div className="flex justify-between items-center mb-3">
+                        <div className="text-sm text-gray-600">
+                          <span className="font-medium">UOM:</span> {product.stock_uom}
+                        </div>
+                        {product.standard_rate > 0 && (
+                          <div className="text-lg font-bold text-red-600">
+                            ₹{product.standard_rate.toLocaleString()}
+                          </div>
+                        )}
+                      </div>
+                      <Button
+                        className="w-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2"
+                        onClick={() => handleAddToCart(product)}
+                      >
+                        <Plus className="h-4 w-4" />
+                        Add to Cart
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
-            <div className="text-sm text-gray-600">
-              Page {currentPage} of {totalPages || 1}
-            </div>
+            {/* Pagination */}
+            {products.length > 0 && (
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="flex items-center gap-1"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Previous
+                  </Button>
+
+                  <div className="flex items-center gap-1">
+                    {/* Show page numbers */}
+                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                      // Calculate page numbers to show around current page
+                      let startPage = Math.max(1, currentPage - 2)
+                      if (currentPage > totalPages - 2) {
+                        startPage = Math.max(1, totalPages - 4)
+                      }
+                      const pageNum = startPage + i
+                      if (pageNum > totalPages) return null
+
+                      return (
+                        <Button
+                          key={pageNum}
+                          variant={pageNum === currentPage ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => handlePageChange(pageNum)}
+                          className={pageNum === currentPage ? "bg-red-600 hover:bg-red-700" : ""}
+                        >
+                          {pageNum}
+                        </Button>
+                      )
+                    })}
+                  </div>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage >= totalPages}
+                    className="flex items-center gap-1"
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                <div className="text-sm text-gray-600">
+                  Page {currentPage} of {totalPages || 1}
+                </div>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Cart Modal */}
