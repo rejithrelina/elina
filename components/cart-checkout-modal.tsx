@@ -22,7 +22,7 @@ export default function CartCheckoutModal({ isOpen, onClose }: CartCheckoutModal
   const [formState, setFormState] = useState({
     firstName: "",
     lastName: "",
-    source: "Website - Cart",
+    source: "Website",
     requestType: "Product Enquiry",
     email: "",
     mobile: "",
@@ -142,7 +142,7 @@ export default function CartCheckoutModal({ isOpen, onClose }: CartCheckoutModal
         setFormState({
           firstName: "",
           lastName: "",
-          source: "Website - Cart",
+          source: "Website",
           requestType: "Product Enquiry",
           email: "",
           mobile: "",
