@@ -3,12 +3,6 @@ import { Button } from "@/components/ui/button"
 import type React from "react"
 import { useEffect, useState } from "react"
 
-const API_URL = "https://elina.frappe.cloud/api"
-const AUTH_HEADER = {
-  Authorization: `token  9403214475f834f:df3e2e8bfee05db`,
-  "Content-Type": "application/json",
-}
-
 export default function ContactFormPage() {
   const [formState, setFormState] = useState({
     firstName: "",
@@ -32,28 +26,20 @@ export default function ContactFormPage() {
     if (document.referrer) {
       setFormState((prev) => ({ ...prev, source: document.referrer }))
     }
+
     // Fetch territories
-    fetch(`${API_URL}/resource/Territory?fields=["territory_name","parent_territory"]&limit=100`, {
-      method: "GET",
-      headers: AUTH_HEADER,
-    })
+    fetch("/api/territories")
       .then((res) => res.json())
       .then((data) => {
-        const filtered = (data.data || [])
-          .map((t: any) => t.territory_name)
-          .filter((name: string) => name !== "All Territories" && !name.includes("Zone"))
-        setTerritories(filtered)
+        setTerritories(data.data || [])
       })
       .catch((err) => console.error("Error fetching territories:", err))
+
     // Fetch countries
-    fetch(`${API_URL}/resource/Country?fields=["country_name"]&limit=500`, {
-      method: "GET",
-      headers: AUTH_HEADER,
-    })
+    fetch("/api/countries")
       .then((res) => res.json())
       .then((data) => {
-        const allCountries = (data.data || []).map((c: any) => c.country_name)
-        setCountries(allCountries)
+        setCountries(data.data || [])
       })
       .catch((err) => console.error("Error fetching countries:", err))
   }, [])
@@ -82,46 +68,37 @@ export default function ContactFormPage() {
     }
 
     try {
-      const resp = await fetch(`${API_URL}/resource/Lead`, {
+      const resp = await fetch("/api/leads", {
         method: "POST",
-        headers: AUTH_HEADER,
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(payload),
       })
+
       const data = await resp.json()
 
-      const duplicate =
-        resp.status === 409 ||
-        data?.exc_type === "DuplicateEntryError" ||
-        String(data?._server_messages).includes("DuplicateEntryError")
-
-      if (duplicate) {
-        setSubmitResult({
-          success: true,
-          message:
-            "Looks like you've already submitted a request with this e-mail address. We'll get back to you shortly!",
-        })
-        return
-      }
-
-      if (!resp.ok) throw new Error(data?.message || resp.statusText)
+      if (!resp.ok) throw new Error(data.message || resp.statusText)
 
       setSubmitResult({
-        success: true,
-        message: "Your request has been submitted! We'll get back to you soon.",
+        success: data.success,
+        message: data.message,
       })
 
-      setFormState({
-        firstName: "",
-        lastName: "",
-        source: "Website",
-        requestType: "Product Enquiry",
-        email: "",
-        mobile: "",
-        organization: "",
-        status: "Open",
-        territory: "",
-        country: "India",
-      })
+      if (data.success) {
+        setFormState({
+          firstName: "",
+          lastName: "",
+          source: "Website",
+          requestType: "Product Enquiry",
+          email: "",
+          mobile: "",
+          organization: "",
+          status: "Open",
+          territory: "",
+          country: "India",
+        })
+      }
     } catch (err: any) {
       setSubmitResult({ success: false, message: `Submission failed: ${err.message}` })
     } finally {

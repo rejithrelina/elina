@@ -7,7 +7,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
-import { ThemeProvider } from "@/components/theme-provider"
 import { QuoteModalProvider } from "@/context/quote-modal-context"
 import { CartProvider } from "@/context/cart-context"
 import FloatingQuoteButton from "@/components/floating-quote-button"
@@ -101,21 +100,19 @@ export default function RootLayout({
         </script>
       </head>
       <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <CartProvider>
-            <QuoteModalProvider>
-              <Suspense>
-                <Header />
-                {children}
-                <Footer />
-                <FloatingQuoteButton />
-                <QuoteModalWrapper />
-              </Suspense>
-              <Analytics />
-              <SpeedInsights />
-            </QuoteModalProvider>
-          </CartProvider>
-        </ThemeProvider>
+        <CartProvider>
+          <QuoteModalProvider>
+            <Suspense>
+              <Header />
+              {children}
+              <Footer />
+              <FloatingQuoteButton />
+              <QuoteModalWrapper />
+            </Suspense>
+            <Analytics />
+            <SpeedInsights />
+          </QuoteModalProvider>
+        </CartProvider>
       </body>
     </html>
   )

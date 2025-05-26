@@ -8,12 +8,6 @@ import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight, Package, Plus, ArrowLeft } from "lucide-react"
 import { useCart } from "@/context/cart-context"
 
-const API_URL = "https://elina.frappe.cloud/api"
-const AUTH_HEADER = {
-  Authorization: `token 9403214475f834f:df3e2e8bfee05db`,
-  "Content-Type": "application/json",
-}
-
 interface ItemAttribute {
   idx: number
   attribute: string
@@ -72,16 +66,18 @@ export default function ProductDetailPage() {
     const fetchProductDetails = async () => {
       try {
         setLoading(true)
-        const response = await fetch(`${API_URL}/resource/Item/${itemCode}`, {
-          method: "GET",
-          headers: AUTH_HEADER,
-        })
+        const response = await fetch(`/api/products/${itemCode}`)
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
 
         const data = await response.json()
+
+        if (data.error) {
+          throw new Error(data.error)
+        }
+
         setProduct(data.data)
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch product details")
@@ -103,35 +99,16 @@ export default function ProductDetailPage() {
       try {
         setVariantsLoading(true)
 
-        // Get total count of variants
-        const countResponse = await fetch(
-          `${API_URL}/method/frappe.client.get_count?doctype=Item&filters=${encodeURIComponent(
-            JSON.stringify([["variant_of", "=", itemCode]]),
-          )}`,
-          {
-            method: "GET",
-            headers: AUTH_HEADER,
-          },
-        )
-
-        if (countResponse.ok) {
-          const countData = await countResponse.json()
-          setTotalVariants(countData.message)
-        }
-
-        // Fetch all variants (we'll do client-side filtering)
-        const response = await fetch(
-          `${API_URL}/resource/Item?fields=["item_code","item_name","item_group","description","stock_uom","standard_rate","image","brand"]&filters=${encodeURIComponent(
-            JSON.stringify([["variant_of", "=", itemCode]]),
-          )}&limit_page_length=1000`,
-          {
-            method: "GET",
-            headers: AUTH_HEADER,
-          },
-        )
+        const response = await fetch(`/api/products/${itemCode}/variants`)
 
         if (response.ok) {
           const data = await response.json()
+
+          if (data.error) {
+            throw new Error(data.error)
+          }
+
+          setTotalVariants(data.totalVariants || 0)
           setVariants(data.data || [])
           setFilteredVariants(data.data || [])
         }

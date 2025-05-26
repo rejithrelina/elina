@@ -6,12 +6,6 @@ import { Button } from "@/components/ui/button"
 import { useCart } from "@/context/cart-context"
 import { X } from "lucide-react"
 
-const API_URL = "https://elina.frappe.cloud/api"
-const AUTH_HEADER = {
-  Authorization: `token 9403214475f834f:df3e2e8bfee05db`,
-  "Content-Type": "application/json",
-}
-
 interface CartCheckoutModalProps {
   isOpen: boolean
   onClose: () => void
@@ -68,9 +62,11 @@ export default function CartCheckoutModal({ isOpen, onClose }: CartCheckoutModal
         doctype: "CRM Note",
       }
 
-      const updateResp = await fetch(`${API_URL}/resource/Lead/${leadId}`, {
+      const updateResp = await fetch(`/api/leads/${leadId}/notes`, {
         method: "PUT",
-        headers: AUTH_HEADER,
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ notes: [note] }),
       })
 
@@ -103,29 +99,25 @@ export default function CartCheckoutModal({ isOpen, onClose }: CartCheckoutModal
 
     try {
       // First create the lead
-      const resp = await fetch(`${API_URL}/resource/Lead`, {
+      const resp = await fetch("/api/leads", {
         method: "POST",
-        headers: AUTH_HEADER,
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(payload),
       })
 
       const data = await resp.json()
 
-      const duplicate =
-        resp.status === 409 ||
-        data?.exc_type === "DuplicateEntryError" ||
-        String(data?._server_messages).includes("DuplicateEntryError")
+      if (!resp.ok) throw new Error(data.message || resp.statusText)
 
-      if (duplicate) {
+      if (!data.success) {
         setSubmitResult({
-          success: true,
-          message:
-            "Looks like you've already submitted a request with this e-mail address. We'll get back to you shortly!",
+          success: data.success,
+          message: data.message,
         })
         return
       }
-
-      if (!resp.ok) throw new Error(data?.message || resp.statusText)
 
       // If lead creation successful, add cart items as note
       const leadId = data.data.name

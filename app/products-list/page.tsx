@@ -10,12 +10,6 @@ import CartModal from "@/components/cart-modal"
 import CartCheckoutModal from "@/components/cart-checkout-modal"
 import BrandFilter from "@/components/brand-filter"
 
-const API_URL = "https://elina.frappe.cloud/api"
-const AUTH_HEADER = {
-  Authorization: `token 9403214475f834f:df3e2e8bfee05db`,
-  "Content-Type": "application/json",
-}
-
 interface Product {
   item_code: string
   item_name: string
@@ -66,82 +60,37 @@ export default function ProductsListPage() {
     return cleanup
   }, [searchInput, debounceSearch])
 
-  // Build filters array for API
-  const buildFilters = (withImagesOnly: boolean, search: string, brand: string) => {
-    const filters: any[] = [["has_variants", "!=", "0"]] // Always filter for main variant items
-
-    if (withImagesOnly) {
-      filters.push(["image", "!=", ""])
-    }
-
-    if (search.trim()) {
-      // Search in item_name, item_code, and description
-      filters.push(["item_name", "like", `%${search.trim()}%`])
-    }
-
-    if (brand) {
-      filters.push(["brand", "=", brand])
-    }
-
-    return filters
-  }
-
   // Fetch total count of items
-  const fetchTotalCount = async (withImagesOnly = false, search = "", brand = "") => {
-    try {
-      let url = `${API_URL}/method/frappe.client.get_count?doctype=Item`
 
-      const filters = buildFilters(withImagesOnly, search, brand)
-      if (filters.length > 0) {
-        url += `&filters=${encodeURIComponent(JSON.stringify(filters))}`
-      }
-
-      const response = await fetch(url, {
-        method: "GET",
-        headers: AUTH_HEADER,
-      })
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-
-      const data: CountResponse = await response.json()
-      return data.message
-    } catch (err) {
-      console.error("Error fetching count:", err)
-      return 0
-    }
-  }
+  // Build filters array for API
 
   const fetchProducts = async (page: number, limit: number, withImagesOnly = false, search = "", brand = "") => {
     setLoading(true)
     setError(null)
 
     try {
-      // First get the total count
-      const count = await fetchTotalCount(withImagesOnly, search, brand)
-      setTotalItems(count)
-
-      // Then fetch the products
-      const limitStart = (page - 1) * limit
-      let url = `${API_URL}/resource/Item?fields=["item_code","item_name","item_group","description","stock_uom","has_variants","image","variant_based_on","brand"]&limit_start=${limitStart}&limit_page_length=${limit}`
-
-      const filters = buildFilters(withImagesOnly, search, brand)
-      if (filters.length > 0) {
-        url += `&filters=${encodeURIComponent(JSON.stringify(filters))}`
-      }
-
-      const response = await fetch(url, {
-        method: "GET",
-        headers: AUTH_HEADER,
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString(),
+        withImages: withImagesOnly.toString(),
+        search,
+        brand,
       })
+
+      const response = await fetch(`/api/products?${params}`)
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
 
-      const data: ApiResponse = await response.json()
+      const data = await response.json()
+
+      if (data.error) {
+        throw new Error(data.error)
+      }
+
       setProducts(data.data || [])
+      setTotalItems(data.totalItems || 0)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to fetch products")
       setProducts([])

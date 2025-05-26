@@ -4,9 +4,6 @@ import type React from "react"
 
 import { X } from "lucide-react"
 import { useState } from "react"
-const API_URL = process.env.API_URL! // "!" = throw if missing
-const API_KEY = process.env.API_KEY!
-const API_SECRET = process.env.API_SECRET!
 interface QuoteRequestModalProps {
   isOpen: boolean
   onClose: () => void
@@ -32,6 +29,7 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitResult(null)
+
     const payload = {
       first_name: formState.firstName,
       last_name: formState.lastName,
@@ -42,55 +40,42 @@ export default function QuoteRequestModal({ isOpen, onClose }: QuoteRequestModal
       company_name: formState.organization,
       status: formState.status,
     }
+
     try {
-      /*
-      const resp = await fetch(`${API_URL}/resource/Lead`, {
-      method: "POST",
-      headers: {
-        Authorization: `token ${API_KEY}:${API_SECRET}`,
-        "Content-Type": "application/json",
-      },*/
-      const resp = await fetch("https://elina.frappe.cloud/api/resource/Lead", {
+      const resp = await fetch("/api/leads", {
         method: "POST",
         headers: {
-          Authorization: `token 9403214475f834f:df3e2e8bfee05db`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
       })
+
       const data = await resp.json()
-      /* ---------- special-case "already submitted" ---------- */
-      const duplicate =
-        resp.status === 409 || // HTTP 409
-        data?.exc_type === "DuplicateEntryError" || // explicit flag
-        String(data?._server_messages).includes("DuplicateEntryError")
-      if (duplicate) {
-        setSubmitResult({
-          success: true, // green banner; change to false if you prefer red
-          message:
-            "Looks like you've already submitted a request with this e-mail address. We'll get back to you shortly!",
-        })
-        return // stop here – no error thrown
-      }
-      if (!resp.ok) throw new Error(data?.message || resp.statusText)
+
+      if (!resp.ok) throw new Error(data.message || resp.statusText)
+
       setSubmitResult({
-        success: true,
-        message: "Your request has been submitted! We'll get back to you soon.",
+        success: data.success,
+        message: data.message,
       })
-      setFormState({
-        firstName: "",
-        lastName: "",
-        source: "Website",
-        requestType: "Product Enquiry",
-        email: "",
-        mobile: "",
-        organization: "",
-        status: "Open",
-      })
-      setTimeout(() => {
-        onClose()
-        setSubmitResult(null)
-      }, 3000)
+
+      if (data.success) {
+        setFormState({
+          firstName: "",
+          lastName: "",
+          source: "Website",
+          requestType: "Product Enquiry",
+          email: "",
+          mobile: "",
+          organization: "",
+          status: "Open",
+        })
+
+        setTimeout(() => {
+          onClose()
+          setSubmitResult(null)
+        }, 3000)
+      }
     } catch (err: any) {
       setSubmitResult({
         success: false,
