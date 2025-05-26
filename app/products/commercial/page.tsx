@@ -84,7 +84,7 @@ export default function CommercialEquipmentPage() {
                   <div className="flex justify-between items-center">
                     <span className="text-red-600 font-semibold">{product.price}</span>
                     <Button variant="outline" className="text-red-600 border-red-600 hover:bg-red-50">
-                      <Link href={`/products/commercial/${product.slug}`}>Details</Link>
+                      <Link href="/products-list">Details</Link>
                     </Button>
                   </div>
                 </div>

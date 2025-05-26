@@ -2,12 +2,13 @@
 import { useState, useEffect, useCallback } from "react"
 import type React from "react"
 import Image from "next/image"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight, Package, ShoppingCart, Plus, Search, X } from "lucide-react"
 import { useCart } from "@/context/cart-context"
 import CartModal from "@/components/cart-modal"
 import CartCheckoutModal from "@/components/cart-checkout-modal"
-import ProductFilters from "@/components/product-filters"
+import BrandFilter from "@/components/brand-filter"
 
 const API_URL = "https://elina.frappe.cloud/api"
 const AUTH_HEADER = {
@@ -21,8 +22,10 @@ interface Product {
   item_group: string
   description: string
   stock_uom: string
-  standard_rate: number
+  has_variants: number
   image: string | null
+  variant_based_on: string
+  brand: string
 }
 
 interface ApiResponse {
@@ -31,12 +34,6 @@ interface ApiResponse {
 
 interface CountResponse {
   message: number
-}
-
-interface FilterValue {
-  attribute: string
-  value: string | number
-  operator: string
 }
 
 export default function ProductsListPage() {
@@ -49,8 +46,8 @@ export default function ProductsListPage() {
   const [showOnlyWithImages, setShowOnlyWithImages] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [searchInput, setSearchInput] = useState("")
-  const [attributeFilters, setAttributeFilters] = useState<FilterValue[]>([])
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false)
+  const [selectedBrand, setSelectedBrand] = useState("")
+  const [isBrandFilterOpen, setIsBrandFilterOpen] = useState(false)
   const { addToCart, getTotalItems } = useCart()
   const [isCartModalOpen, setIsCartModalOpen] = useState(false)
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false)
@@ -70,8 +67,8 @@ export default function ProductsListPage() {
   }, [searchInput, debounceSearch])
 
   // Build filters array for API
-  const buildFilters = (withImagesOnly: boolean, search: string, attrFilters: FilterValue[]) => {
-    const filters: any[] = []
+  const buildFilters = (withImagesOnly: boolean, search: string, brand: string) => {
+    const filters: any[] = [["has_variants", "!=", "0"]] // Always filter for main variant items
 
     if (withImagesOnly) {
       filters.push(["image", "!=", ""])
@@ -82,20 +79,19 @@ export default function ProductsListPage() {
       filters.push(["item_name", "like", `%${search.trim()}%`])
     }
 
-    // Add attribute filters
-    attrFilters.forEach((filter) => {
-      filters.push([filter.attribute, filter.operator, filter.value])
-    })
+    if (brand) {
+      filters.push(["brand", "=", brand])
+    }
 
     return filters
   }
 
   // Fetch total count of items
-  const fetchTotalCount = async (withImagesOnly = false, search = "", attrFilters: FilterValue[] = []) => {
+  const fetchTotalCount = async (withImagesOnly = false, search = "", brand = "") => {
     try {
       let url = `${API_URL}/method/frappe.client.get_count?doctype=Item`
 
-      const filters = buildFilters(withImagesOnly, search, attrFilters)
+      const filters = buildFilters(withImagesOnly, search, brand)
       if (filters.length > 0) {
         url += `&filters=${encodeURIComponent(JSON.stringify(filters))}`
       }
@@ -117,26 +113,20 @@ export default function ProductsListPage() {
     }
   }
 
-  const fetchProducts = async (
-    page: number,
-    limit: number,
-    withImagesOnly = false,
-    search = "",
-    attrFilters: FilterValue[] = [],
-  ) => {
+  const fetchProducts = async (page: number, limit: number, withImagesOnly = false, search = "", brand = "") => {
     setLoading(true)
     setError(null)
 
     try {
       // First get the total count
-      const count = await fetchTotalCount(withImagesOnly, search, attrFilters)
+      const count = await fetchTotalCount(withImagesOnly, search, brand)
       setTotalItems(count)
 
       // Then fetch the products
       const limitStart = (page - 1) * limit
-      let url = `${API_URL}/resource/Item?fields=["item_code","item_name","item_group","description","stock_uom","standard_rate","image"]&limit_start=${limitStart}&limit_page_length=${limit}`
+      let url = `${API_URL}/resource/Item?fields=["item_code","item_name","item_group","description","stock_uom","has_variants","image","variant_based_on","brand"]&limit_start=${limitStart}&limit_page_length=${limit}`
 
-      const filters = buildFilters(withImagesOnly, search, attrFilters)
+      const filters = buildFilters(withImagesOnly, search, brand)
       if (filters.length > 0) {
         url += `&filters=${encodeURIComponent(JSON.stringify(filters))}`
       }
@@ -161,8 +151,8 @@ export default function ProductsListPage() {
   }
 
   useEffect(() => {
-    fetchProducts(currentPage, itemsPerPage, showOnlyWithImages, searchQuery, attributeFilters)
-  }, [currentPage, itemsPerPage, showOnlyWithImages, searchQuery, attributeFilters])
+    fetchProducts(currentPage, itemsPerPage, showOnlyWithImages, searchQuery, selectedBrand)
+  }, [currentPage, itemsPerPage, showOnlyWithImages, searchQuery, selectedBrand])
 
   const totalPages = Math.ceil(totalItems / itemsPerPage)
 
@@ -191,9 +181,9 @@ export default function ProductsListPage() {
     setSearchQuery("")
   }
 
-  const handleAttributeFiltersChange = (filters: FilterValue[]) => {
-    setAttributeFilters(filters)
-    setCurrentPage(1) // Reset to first page when changing filters
+  const handleBrandChange = (brand: string) => {
+    setSelectedBrand(brand)
+    setCurrentPage(1) // Reset to first page when changing brand
   }
 
   const handleAddToCart = (product: Product) => {
@@ -203,7 +193,7 @@ export default function ProductsListPage() {
       item_group: product.item_group,
       description: product.description,
       stock_uom: product.stock_uom,
-      standard_rate: product.standard_rate,
+      standard_rate: 0, // Main variant items don't have rates
       image: product.image,
     })
   }
@@ -213,9 +203,9 @@ export default function ProductsListPage() {
     setIsCheckoutModalOpen(true)
   }
 
-  const hasActiveFilters = showOnlyWithImages || searchQuery || attributeFilters.length > 0
+  const hasActiveFilters = showOnlyWithImages || searchQuery || selectedBrand
 
-  if (loading && currentPage === 1 && !searchQuery && attributeFilters.length === 0) {
+  if (loading && currentPage === 1 && !searchQuery && !selectedBrand) {
     return (
       <main className="min-h-screen py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -235,9 +225,7 @@ export default function ProductsListPage() {
             <h1 className="text-4xl font-bold text-gray-900 mb-4">Error Loading Products</h1>
             <p className="text-red-600 mb-4">{error}</p>
             <Button
-              onClick={() =>
-                fetchProducts(currentPage, itemsPerPage, showOnlyWithImages, searchQuery, attributeFilters)
-              }
+              onClick={() => fetchProducts(currentPage, itemsPerPage, showOnlyWithImages, searchQuery, selectedBrand)}
               className="bg-red-600 hover:bg-red-700"
             >
               Try Again
@@ -263,10 +251,11 @@ export default function ProductsListPage() {
           {/* Filters Sidebar */}
           <div className="lg:w-1/4">
             <div className="sticky top-24">
-              <ProductFilters
-                onFiltersChange={handleAttributeFiltersChange}
-                isOpen={isFiltersOpen}
-                onToggle={() => setIsFiltersOpen(!isFiltersOpen)}
+              <BrandFilter
+                onBrandChange={handleBrandChange}
+                selectedBrand={selectedBrand}
+                isOpen={isBrandFilterOpen}
+                onToggle={() => setIsBrandFilterOpen(!isBrandFilterOpen)}
               />
             </div>
           </div>
@@ -349,7 +338,7 @@ export default function ProductsListPage() {
               <div className="mb-6 p-4 bg-gray-50 rounded-lg">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-gray-700">
-                    Active filters: {(showOnlyWithImages ? 1 : 0) + (searchQuery ? 1 : 0) + attributeFilters.length}
+                    Active filters: {(showOnlyWithImages ? 1 : 0) + (searchQuery ? 1 : 0) + (selectedBrand ? 1 : 0)}
                   </span>
                   <Button
                     variant="ghost"
@@ -357,7 +346,7 @@ export default function ProductsListPage() {
                     onClick={() => {
                       setShowOnlyWithImages(false)
                       clearSearch()
-                      setAttributeFilters([])
+                      setSelectedBrand("")
                     }}
                     className="text-red-600 hover:text-red-700"
                   >
@@ -368,7 +357,7 @@ export default function ProductsListPage() {
             )}
 
             {/* Loading overlay for page changes */}
-            {loading && (currentPage > 1 || searchQuery || attributeFilters.length > 0) && (
+            {loading && (currentPage > 1 || searchQuery || selectedBrand) && (
               <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
                 <div className="bg-white p-4 rounded-lg shadow-lg flex items-center gap-3">
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-red-600"></div>
@@ -394,7 +383,7 @@ export default function ProductsListPage() {
                     onClick={() => {
                       setShowOnlyWithImages(false)
                       clearSearch()
-                      setAttributeFilters([])
+                      setSelectedBrand("")
                     }}
                     variant="outline"
                     className="mt-4"
@@ -410,28 +399,35 @@ export default function ProductsListPage() {
                     key={product.item_code}
                     className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1"
                   >
-                    <div className="relative h-48 w-full bg-gray-100">
-                      {product.image ? (
-                        <Image
-                          src={"https://elina.frappe.cloud" + product.image || "/placeholder.svg"}
-                          alt={product.item_name}
-                          fill
-                          className="object-cover"
-                          onError={(e) => {
-                            // Fallback to placeholder if image fails to load
-                            const target = e.target as HTMLImageElement
-                            target.src = "/placeholder.svg?height=200&width=300"
-                          }}
-                        />
-                      ) : (
-                        <div className="flex items-center justify-center h-full">
-                          <Package className="h-12 w-12 text-gray-400" />
-                        </div>
-                      )}
-                    </div>
+                    <Link href={`/product/${product.item_code}`}>
+                      <div className="relative h-48 w-full bg-gray-100 cursor-pointer">
+                        {product.image ? (
+                          <Image
+                            src={"https://elina.frappe.cloud" + product.image || "/placeholder.svg"}
+                            alt={product.item_name}
+                            fill
+                            className="object-cover"
+                            onError={(e) => {
+                              // Fallback to placeholder if image fails to load
+                              const target = e.target as HTMLImageElement
+                              target.src = "/placeholder.svg?height=200&width=300"
+                            }}
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center h-full">
+                            <Package className="h-12 w-12 text-gray-400" />
+                          </div>
+                        )}
+                      </div>
+                    </Link>
                     <div className="p-4">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{product.item_name}</h3>
+                      <Link href={`/product/${product.item_code}`}>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-red-600 cursor-pointer">
+                          {product.item_name}
+                        </h3>
+                      </Link>
                       <p className="text-sm text-gray-600 mb-2">Code: {product.item_code}</p>
+                      <p className="text-sm text-gray-600 mb-2">Brand: {product.brand}</p>
                       <p className="text-sm text-gray-600 mb-2">Group: {product.item_group}</p>
                       {product.description && (
                         <p className="text-sm text-gray-700 mb-3 line-clamp-3">{product.description}</p>
@@ -440,19 +436,21 @@ export default function ProductsListPage() {
                         <div className="text-sm text-gray-600">
                           <span className="font-medium">UOM:</span> {product.stock_uom}
                         </div>
-                        {product.standard_rate > 0 && (
-                          <div className="text-lg font-bold text-red-600">
-                            ₹{product.standard_rate.toLocaleString()}
-                          </div>
-                        )}
+                        <div className="text-sm text-blue-600 font-medium">Has Variants</div>
                       </div>
-                      <Button
-                        className="w-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2"
-                        onClick={() => handleAddToCart(product)}
-                      >
-                        <Plus className="h-4 w-4" />
-                        Add to Cart
-                      </Button>
+                      <div className="flex gap-2">
+                        <Link href={`/product/${product.item_code}`} className="flex-1">
+                          <Button variant="outline" className="w-full text-red-600 border-red-600 hover:bg-red-50">
+                            View Details
+                          </Button>
+                        </Link>
+                        <Button
+                          className="bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2"
+                          onClick={() => handleAddToCart(product)}
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}

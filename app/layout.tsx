@@ -101,7 +101,7 @@ export default function RootLayout({
         </script>
       </head>
       <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="light">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <CartProvider>
             <QuoteModalProvider>
               <Suspense>

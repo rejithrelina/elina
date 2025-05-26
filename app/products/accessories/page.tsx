@@ -112,7 +112,7 @@ export default function AccessoriesPage() {
                   <div className="flex justify-between items-center">
                     <span className="text-red-600 font-semibold">{accessory.price}</span>
                     <Button variant="outline" size="sm" className="text-red-600 border-red-600 hover:bg-red-50">
-                      Details
+                      <Link href="/products-list">Details</Link>
                     </Button>
                   </div>
                 </div>

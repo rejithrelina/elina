@@ -12,7 +12,7 @@ export default function ProductCard({ product }) {
         <h3 className="text-xl font-semibold text-gray-900 mb-2">{product.name}</h3>
         <p className="text-gray-600 mb-4">{product.description}</p>
         <Button variant="outline" className="w-full text-red-600 border-red-600 hover:bg-red-50">
-          <Link href={`/products/${product.slug}`}>View Details</Link>
+          <Link href="/products-list">View Details</Link>
         </Button>
       </div>
     </div>

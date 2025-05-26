@@ -10,6 +10,7 @@ import { useCart } from "@/context/cart-context"
 import CartModal from "@/components/cart-modal"
 import CartCheckoutModal from "@/components/cart-checkout-modal"
 import { ShoppingCart } from "lucide-react"
+import ThemeToggle from "@/components/theme-toggle"
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -105,6 +106,8 @@ export default function Header() {
                 )}
               </Button>
 
+              <ThemeToggle />
+
               <Button className="bg-red-600 hover:bg-red-700 text-white" onClick={openQuoteModal}>
                 Request Quote
               </Button>
@@ -121,6 +124,8 @@ export default function Header() {
                   </span>
                 )}
               </Button>
+
+              <ThemeToggle />
 
               <Button variant="ghost" size="icon" onClick={toggleMenu}>
                 {isMenuOpen ? (

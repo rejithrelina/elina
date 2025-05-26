@@ -78,7 +78,7 @@ export default function SparePartsPage() {
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">{category.name}</h3>
                   <p className="text-gray-600 mb-4">{category.description}</p>
                   <Button className="w-full bg-red-600 hover:bg-red-700 text-white">
-                    <Link href={`/products/spare-parts/${category.slug}`}>View Parts</Link>
+                    <Link href="/products-list">View Parts</Link>
                   </Button>
                 </div>
               </div>
