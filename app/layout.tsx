@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@YourTwitterHandle" />
@@ -103,6 +103,20 @@ export default function RootLayout({
             ],
           })}
         </script>
+
+       
+        <Script id="zoho-init" strategy="beforeInteractive">
+          {`
+            window.$zoho = window.$zoho || {};
+            $zoho.salesiq = $zoho.salesiq || { ready: function() {} };
+          `}
+        </Script>
+        <Script
+          id="zsiqscript"
+          src="https://salesiq.zohopublic.com/widget?wc=siqf2e9c34f02e907e9c53c8fe28ef2289f01c95591dea6d921f7a086698b620b7c"
+          strategy="afterInteractive"
+          defer
+        />
       </head>
       <body className={inter.className}>
         <CartProvider>
