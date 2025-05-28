@@ -9,7 +9,7 @@ import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { QuoteModalProvider } from "@/context/quote-modal-context"
 import { CartProvider } from "@/context/cart-context"
-import FloatingQuoteButton from "@/components/floating-quote-button"
+
 import QuoteModalWrapper from "@/components/quote-modal-wrapper"
 import { Suspense } from "react"
 
