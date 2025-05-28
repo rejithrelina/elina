@@ -105,18 +105,7 @@ export default function RootLayout({
         </script>
 
        
-        <Script id="zoho-init" strategy="beforeInteractive">
-          {`
-            window.$zoho = window.$zoho || {};
-            $zoho.salesiq = $zoho.salesiq || { ready: function() {} };
-          `}
-        </Script>
-        <Script
-          id="zsiqscript"
-          src="https://salesiq.zohopublic.com/widget?wc=siqf2e9c34f02e907e9c53c8fe28ef2289f01c95591dea6d921f7a086698b620b7c"
-          strategy="afterInteractive"
-          defer
-        />
+
       </head>
       <body className={inter.className}>
         <CartProvider>
@@ -125,7 +114,7 @@ export default function RootLayout({
               <Header />
               {children}
               <Footer />
-              <FloatingQuoteButton />
+            
               <QuoteModalWrapper />
             </Suspense>
             <Analytics />
