@@ -225,7 +225,7 @@ export default function Header() {
           </div>
         )}
       </header>
-              <Script id="zoho-init" strategy="beforeInteractive">
+       <Script id="zoho-init" strategy="beforeInteractive">
           {`
             window.$zoho = window.$zoho || {};
             $zoho.salesiq = $zoho.salesiq || { ready: function() {} };
@@ -237,6 +237,7 @@ export default function Header() {
           strategy="afterInteractive"
           defer
         />
+
 
       {/* Cart Modal */}
       <CartModal isOpen={isCartModalOpen} onClose={() => setIsCartModalOpen(false)} onCheckout={handleCheckout} />

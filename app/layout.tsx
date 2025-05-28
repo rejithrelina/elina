@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <head>
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@YourTwitterHandle" />
@@ -42,11 +42,6 @@ export default function RootLayout({
         <meta name="twitter:image" content="https://elina.frappe.cloud/files/elina-logo-w.jpg" />
 
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-NSL8D1BTBG" strategy="afterInteractive" />
-        <script type="application/ld+json"> {`
-            window.$zoho = window.$zoho || {};
-            $zoho.salesiq = $zoho.salesiq || { ready: function() {} };
-          `}</script>
-        <script id="zsiqscript" src="https://salesiq.zohopublic.com/widget?wc=siqf2e9c34f02e907e9c53c8fe28ef2289f01c95591dea6d921f7a086698b620b7c" defer></script>
         <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
@@ -103,9 +98,6 @@ export default function RootLayout({
             ],
           })}
         </script>
-
-       
-
       </head>
       <body className={inter.className}>
         <CartProvider>
@@ -114,7 +106,7 @@ export default function RootLayout({
               <Header />
               {children}
               <Footer />
-            
+              
               <QuoteModalWrapper />
             </Suspense>
             <Analytics />
