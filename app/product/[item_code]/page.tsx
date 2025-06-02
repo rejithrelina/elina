@@ -5,8 +5,9 @@ import { useParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, Package, Plus, ArrowLeft } from "lucide-react"
+import { ChevronLeft, ChevronRight, Package, Plus, ArrowLeft, X } from "lucide-react"
 import { useCart } from "@/context/cart-context"
+import SocialShare from "@/components/social-share"
 
 interface ItemAttribute {
   idx: number
@@ -264,6 +265,14 @@ export default function ProductDetailPage() {
                   <span className="font-medium">Total Variants:</span> {totalVariants}
                 </p>
               </div>
+
+              {/* Social Share */}
+              <SocialShare
+                url={`/product/${product.item_code}`}
+                title={product.item_name}
+                description={product.description?.replace(/<[^>]*>/g, "").substring(0, 160)}
+              />
+
               {product.description && (
                 <div className="mb-6">
                   <h3 className="font-medium text-gray-900 mb-2">Description</h3>
@@ -274,185 +283,213 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Filters Section */}
-        {product.attributes && product.attributes.length > 0 && (
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Filter Variants</h2>
-              {Object.keys(filters).length > 0 && (
-                <Button variant="outline" onClick={clearAllFilters} className="text-red-600 border-red-600">
-                  Clear All Filters
-                </Button>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {product.attributes.map((attr) => (
-                <div key={attr.attribute} className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    {attr.attribute}
-                    {filters[attr.attribute] !== undefined && (
-                      <button
-                        onClick={() => clearFilter(attr.attribute)}
-                        className="ml-2 text-red-600 hover:text-red-700 text-xs"
+        {/* Main Content with Sidebar Layout */}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Left Sidebar - Filters */}
+          {product.attributes && product.attributes.length > 0 && (
+            <div className="lg:w-1/4">
+              <div className="sticky top-24">
+                <div className="bg-white rounded-lg shadow-md p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-lg font-bold text-gray-900">Filter Variants</h2>
+                    {Object.keys(filters).length > 0 && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={clearAllFilters}
+                        className="text-red-600 border-red-600"
                       >
-                        (clear)
-                      </button>
+                        Clear All
+                      </Button>
                     )}
-                  </label>
-                  {attr.numeric_values ? (
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        min={attr.from_range}
-                        max={attr.to_range}
-                        step={attr.increment || 1}
-                        value={filters[attr.attribute] || ""}
-                        onChange={(e) =>
-                          handleFilterChange(attr.attribute, e.target.value ? Number(e.target.value) : 0)
-                        }
-                        className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-red-500 focus:border-red-500"
-                        placeholder={`${attr.from_range} - ${attr.to_range}`}
-                      />
+                  </div>
+
+                  {/* Active Filters */}
+                  {Object.keys(filters).length > 0 && (
+                    <div className="mb-6">
+                      <h3 className="text-sm font-medium text-gray-700 mb-2">Active Filters:</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {Object.entries(filters).map(([attribute, value]) => (
+                          <div
+                            key={attribute}
+                            className="flex items-center gap-1 bg-red-50 text-red-700 px-2 py-1 rounded text-sm"
+                          >
+                            <span>
+                              {attribute}: {value}
+                            </span>
+                            <button onClick={() => clearFilter(attribute)} className="hover:text-red-900">
+                              <X className="h-3 w-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  ) : (
-                    <select
-                      value={filters[attr.attribute] || ""}
-                      onChange={(e) => handleFilterChange(attr.attribute, Number(e.target.value))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-red-500 focus:border-red-500"
-                    >
-                      <option value="">All {attr.attribute}</option>
-                      {/* In a real implementation, you'd fetch attribute values */}
-                    </select>
                   )}
-                  <div className="text-xs text-gray-500">
-                    Range: {attr.from_range} - {attr.to_range}
-                    {attr.increment > 0 && ` (step: ${attr.increment})`}
+
+                  <div className="space-y-6">
+                    {product.attributes.map((attr) => (
+                      <div key={attr.attribute} className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700">{attr.attribute}</label>
+                        {attr.numeric_values ? (
+                          <div className="space-y-2">
+                            <input
+                              type="number"
+                              min={attr.from_range}
+                              max={attr.to_range}
+                              step={attr.increment || 1}
+                              value={filters[attr.attribute] || ""}
+                              onChange={(e) =>
+                                handleFilterChange(attr.attribute, e.target.value ? Number(e.target.value) : 0)
+                              }
+                              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-red-500 focus:border-red-500"
+                              placeholder={`${attr.from_range} - ${attr.to_range}`}
+                            />
+                            <div className="text-xs text-gray-500">
+                              Range: {attr.from_range} - {attr.to_range}
+                              {attr.increment > 0 && ` (step: ${attr.increment})`}
+                            </div>
+                          </div>
+                        ) : (
+                          <select
+                            value={filters[attr.attribute] || ""}
+                            onChange={(e) => handleFilterChange(attr.attribute, Number(e.target.value))}
+                            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-red-500 focus:border-red-500"
+                          >
+                            <option value="">All {attr.attribute}</option>
+                            {/* In a real implementation, you'd fetch attribute values */}
+                          </select>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Variants Section */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-gray-900">Available Variants ({filteredVariants.length})</h2>
-            <div className="text-sm text-gray-600">
-              Showing {currentVariants.length} of {filteredVariants.length} variants
-            </div>
-          </div>
-
-          {variantsLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
-            </div>
-          ) : currentVariants.length === 0 ? (
-            <div className="text-center py-12">
-              <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No variants found</h3>
-              <p className="text-gray-600">
-                {Object.keys(filters).length > 0
-                  ? "No variants match your current filters. Try adjusting the filters."
-                  : "No variants available for this product."}
-              </p>
-            </div>
-          ) : (
-            <>
-              {/* Variants Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                {currentVariants.map((variant) => (
-                  <div
-                    key={variant.item_code}
-                    className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-                  >
-                    <div className="relative h-32 w-full bg-gray-100 rounded mb-4">
-                      {variant.image ? (
-                        <Image
-                          src={"https://elina.frappe.cloud" + variant.image}
-                          alt={variant.item_name}
-                          fill
-                          className="object-cover rounded"
-                        />
-                      ) : (
-                        <div className="flex items-center justify-center h-full">
-                          <Package className="h-8 w-8 text-gray-400" />
-                        </div>
-                      )}
-                    </div>
-                    <h3 className="font-medium text-gray-900 mb-2 line-clamp-2">{variant.item_name}</h3>
-                    <p className="text-sm text-gray-600 mb-2">Code: {variant.item_code}</p>
-                    <div className="flex justify-between items-center mb-3">
-                      <div className="text-sm text-gray-600">
-                        <span className="font-medium">UOM:</span> {variant.stock_uom}
-                      </div>
-                      {variant.standard_rate > 0 && (
-                        <div className="text-lg font-bold text-red-600">₹{variant.standard_rate.toLocaleString()}</div>
-                      )}
-                    </div>
-                    <Button
-                      className="w-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2"
-                      onClick={() => handleAddToCart(variant)}
-                    >
-                      <Plus className="h-4 w-4" />
-                      Add to Cart
-                    </Button>
-                  </div>
-                ))}
+          {/* Right Content - Variants */}
+          <div className={product.attributes && product.attributes.length > 0 ? "lg:w-3/4" : "w-full"}>
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-gray-900">Available Variants ({filteredVariants.length})</h2>
+                <div className="text-sm text-gray-600">
+                  Showing {currentVariants.length} of {filteredVariants.length} variants
+                </div>
               </div>
 
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="flex justify-center items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="flex items-center gap-1"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                    Previous
-                  </Button>
-
-                  <div className="flex items-center gap-1">
-                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                      let startPage = Math.max(1, currentPage - 2)
-                      if (currentPage > totalPages - 2) {
-                        startPage = Math.max(1, totalPages - 4)
-                      }
-                      const pageNum = startPage + i
-                      if (pageNum > totalPages) return null
-
-                      return (
+              {variantsLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
+                </div>
+              ) : currentVariants.length === 0 ? (
+                <div className="text-center py-12">
+                  <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No variants found</h3>
+                  <p className="text-gray-600">
+                    {Object.keys(filters).length > 0
+                      ? "No variants match your current filters. Try adjusting the filters."
+                      : "No variants available for this product."}
+                  </p>
+                </div>
+              ) : (
+                <>
+                  {/* Variants Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    {currentVariants.map((variant) => (
+                      <div
+                        key={variant.item_code}
+                        className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                      >
+                        <div className="relative h-32 w-full bg-gray-100 rounded mb-4">
+                          {variant.image ? (
+                            <Image
+                              src={"https://elina.frappe.cloud" + variant.image}
+                              alt={variant.item_name}
+                              fill
+                              className="object-cover rounded"
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center h-full">
+                              <Package className="h-8 w-8 text-gray-400" />
+                            </div>
+                          )}
+                        </div>
+                        <h3 className="font-medium text-gray-900 mb-2 line-clamp-2">{variant.item_name}</h3>
+                        <p className="text-sm text-gray-600 mb-2">Code: {variant.item_code}</p>
+                        <div className="flex justify-between items-center mb-3">
+                          <div className="text-sm text-gray-600">
+                            <span className="font-medium">UOM:</span> {variant.stock_uom}
+                          </div>
+                          {variant.standard_rate > 0 && (
+                            <div className="text-lg font-bold text-red-600">
+                              ₹{variant.standard_rate.toLocaleString()}
+                            </div>
+                          )}
+                        </div>
                         <Button
-                          key={pageNum}
-                          variant={pageNum === currentPage ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setCurrentPage(pageNum)}
-                          className={pageNum === currentPage ? "bg-red-600 hover:bg-red-700" : ""}
+                          className="w-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2"
+                          onClick={() => handleAddToCart(variant)}
                         >
-                          {pageNum}
+                          <Plus className="h-4 w-4" />
+                          Add to Cart
                         </Button>
-                      )
-                    })}
+                      </div>
+                    ))}
                   </div>
 
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage(currentPage + 1)}
-                    disabled={currentPage >= totalPages}
-                    className="flex items-center gap-1"
-                  >
-                    Next
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="flex justify-center items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setCurrentPage(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="flex items-center gap-1"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                        Previous
+                      </Button>
+
+                      <div className="flex items-center gap-1">
+                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                          let startPage = Math.max(1, currentPage - 2)
+                          if (currentPage > totalPages - 2) {
+                            startPage = Math.max(1, totalPages - 4)
+                          }
+                          const pageNum = startPage + i
+                          if (pageNum > totalPages) return null
+
+                          return (
+                            <Button
+                              key={pageNum}
+                              variant={pageNum === currentPage ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => setCurrentPage(pageNum)}
+                              className={pageNum === currentPage ? "bg-red-600 hover:bg-red-700" : ""}
+                            >
+                              {pageNum}
+                            </Button>
+                          )
+                        })}
+                      </div>
+
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setCurrentPage(currentPage + 1)}
+                        disabled={currentPage >= totalPages}
+                        className="flex items-center gap-1"
+                      >
+                        Next
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </>
               )}
-            </>
-          )}
+            </div>
+          </div>
         </div>
       </div>
     </main>

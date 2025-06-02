@@ -9,7 +9,6 @@ import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { QuoteModalProvider } from "@/context/quote-modal-context"
 import { CartProvider } from "@/context/cart-context"
-
 import QuoteModalWrapper from "@/components/quote-modal-wrapper"
 import { Suspense } from "react"
 
@@ -21,7 +20,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "https://elina.frappe.cloud/files/favicon.ico",
   },
-    generator: 'v0.dev'
+  generator: "v0.dev",
 }
 
 export default function RootLayout({
@@ -106,7 +105,6 @@ export default function RootLayout({
               <Header />
               {children}
               <Footer />
-              
               <QuoteModalWrapper />
             </Suspense>
             <Analytics />
