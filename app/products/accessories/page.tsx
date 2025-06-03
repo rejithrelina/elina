@@ -61,7 +61,7 @@ export default function AccessoriesPage() {
           </p>
         </div>
 
-        {/* Accessories Grid */}
+        {/* Accessories Grid
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {accessoryCategories.map((category, index) => (
             <div
@@ -94,7 +94,7 @@ export default function AccessoriesPage() {
               </div>
             </div>
           ))}
-        </div>
+        </div> 
 
         {/* Features Section */}
         <div className="glass-card p-8 mb-16">

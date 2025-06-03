@@ -83,7 +83,7 @@ export default function SparePartsPage() {
           </p>
         </div>
 
-        {/* Parts Categories */}
+        {/* Parts Categories
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {partCategories.map((category, index) => (
             <div
@@ -116,7 +116,7 @@ export default function SparePartsPage() {
               </div>
             </div>
           ))}
-        </div>
+        </div>  */}
 
         {/* Services Section */}
         <div className="glass-card p-8 mb-16">
