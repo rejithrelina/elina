@@ -4,28 +4,57 @@ import { Button } from "@/components/ui/button"
 
 export default function CustomProductsPage() {
   const customSolutions = [
-    {
-      id: 1,
-      title: "Restaurant Kitchen Design",
-      description: "Complete kitchen layout and equipment planning for restaurants",
-      image: "https://placehold.co/600x400.png",
-      process: ["Site Survey", "Design Planning", "Equipment Selection", "Installation"],
-    },
-    {
-      id: 2,
-      title: "Hotel Kitchen Solutions",
-      description: "Large-scale kitchen systems for hotels and hospitality",
-      image: "https://placehold.co/600x400.png",
-      process: ["Capacity Planning", "Workflow Design", "Equipment Integration", "Staff Training"],
-    },
-    {
-      id: 3,
-      title: "Catering Facility Setup",
-      description: "Specialized equipment for catering and food service operations",
-      image: "https://placehold.co/600x400.png",
-      process: ["Requirements Analysis", "Custom Fabrication", "Quality Testing", "Delivery & Setup"],
-    },
-  ]
+  {
+    id: 1,
+    title: "Restaurant Kitchens",
+    description: "End-to-end design and equipment for efficient, high-volume restaurant operations.",
+    image: "https://placehold.co/600x400.png",
+    process: ["Site Survey", "Menu Analysis", "Layout Planning", "Installation & Handover"],
+  },
+  {
+    id: 2,
+    title: "Café & Bakery Kitchens",
+    description: "Specialized layouts and baking equipment for cafes, bakeries, and patisseries.",
+    image: "https://placehold.co/600x400.png",
+    process: ["Space Assessment", "Equipment Selection", "Utility Mapping", "Commissioning"],
+  },
+  {
+    id: 3,
+    title: "Catering Kitchens",
+    description: "Mobile and high-capacity setups designed for off-site catering services.",
+    image: "https://placehold.co/600x400.png",
+    process: ["Requirement Analysis", "Custom Fabrication", "Mobility Planning", "Deployment"],
+  },
+  {
+    id: 4,
+    title: "Cloud Kitchens / Ghost Kitchens",
+    description: "Compact, delivery-optimized kitchens for virtual brands and multi-brand setups.",
+    image: "https://placehold.co/600x400.png",
+    process: ["Workflow Optimization", "Multi-brand Integration", "Ventilation & Safety", "Setup & Launch"],
+  },
+  {
+    id: 5,
+    title: "Institutional Kitchens",
+    description: "Mass-meal production kitchens for schools, colleges, hospitals, and hostels.",
+    image: "https://placehold.co/600x400.png",
+    process: ["Capacity Planning", "Industrial Equipment Setup", "Hygiene Compliance", "Staff Training"],
+  },
+  {
+    id: 6,
+    title: "Central Commissary Kitchens",
+    description: "Large-scale centralized kitchens for multi-outlet food production and distribution.",
+    image: "https://placehold.co/600x400.png",
+    process: ["Production Flow Design", "Bulk Equipment Installation", "Cold Storage Integration", "Automation"],
+  },
+  {
+    id: 7,
+    title: "R&D Kitchens",
+    description: "Custom-built kitchens for testing, food innovation, and product development.",
+    image: "https://placehold.co/600x400.png",
+    process: ["Requirement Gathering", "Specialized Equipment", "Prototype Setup", "Iteration Support"],
+  },
+]
+
 
   const customizationOptions = [
     {
@@ -44,9 +73,9 @@ export default function CustomProductsPage() {
       icon: "⚙️",
     },
     {
-      title: "Branding Options",
-      description: "Custom branding and labeling for your equipment",
-      icon: "🏷️",
+      title: "Smart Technology Integration",
+      description: "Incorporate IoT, automation, and energy-efficient systems",
+      icon: "📡",
     },
   ]
 
