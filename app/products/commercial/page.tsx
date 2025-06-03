@@ -154,8 +154,11 @@ export default function CommercialProductsPage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">24/7 Support</h3>
-              <p className="text-gray-600 dark:text-gray-400">Round-the-clock technical support and maintenance</p>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Emergency Support</h3>
+              <p className="text-gray-600 dark:text-gray-400">
+              Urgent technical support available during business hours.
+              </p>
+
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">

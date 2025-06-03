@@ -186,8 +186,7 @@ export default function SparePartsPage() {
             </div>
             <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Emergency Parts Service</h3>
             <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-              Equipment breakdown? We offer 24/7 emergency parts service to get your kitchen back up and running
-              quickly.
+              📅 Regular Hours: Monday – Saturday, 9:30 AM – 6:30 PM
             </p>
             <Button size="lg" className="btn-modern-primary">
               <Link href="/contact">Emergency Support</Link>
