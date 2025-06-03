@@ -29,18 +29,20 @@ export default function Home() {
         </div>
         <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl text-white">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Premium Kitchen Equipment Manufacturing</h1>
-            <p className="text-lg md:text-xl mb-8">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-shadow">
+              Premium Kitchen Equipment Manufacturing
+            </h1>
+            <p className="text-lg md:text-xl mb-8 text-shadow">
               Crafting excellence for commercial and residential kitchens since 2018
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white">
+              <Button size="lg" className="btn-modern-primary">
                 <Link href="/products">Explore Products</Link>
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="text-black border-white hover:bg-white/10"
+                className="bg-white/10 text-white border-white hover:bg-white/20 backdrop-blur-sm"
                 onClick={openQuoteModal}
               >
                 Request a Quote
@@ -51,30 +53,30 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 section-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row items-center gap-12">
-            <div className="lg:w-1/2">
-              <h2 className="text-3xl font-bold mb-6 text-gray-900">About Syena Kitchenconceptz</h2>
-              <p className="text-lg text-gray-700 mb-6">
+            <div className="lg:w-1/2 fade-in">
+              <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">About Syena Kitchenconceptz</h2>
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
                 Founded in 2018, Syena Kitchenconceptz Manufacturing Private Limited has established itself as a leading
                 manufacturer of premium kitchen equipment in India.
               </p>
-              <p className="text-lg text-gray-700 mb-6">
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
                 We combine innovative design with superior craftsmanship to create kitchen solutions that enhance
                 efficiency, durability, and aesthetics for both commercial and residential spaces.
               </p>
               <div className="flex items-center">
                 <Link
                   href="/about"
-                  className="text-red-600 font-medium flex items-center hover:text-red-700 transition-colors"
+                  className="text-red-600 dark:text-red-400 font-medium flex items-center hover:text-red-700 dark:hover:text-red-300 transition-colors"
                 >
                   Learn more about our journey
                   <ChevronRight className="ml-1 h-4 w-4" />
                 </Link>
               </div>
             </div>
-            <div className="lg:w-1/2 relative h-[400px] w-full rounded-lg overflow-hidden shadow-xl">
+            <div className="lg:w-1/2 relative h-[400px] w-full rounded-lg overflow-hidden shadow-xl slide-in-right">
               <Image
                 src="https://elina.frappe.cloud/files/factory.png"
                 alt="Syena Kitchenconceptz Manufacturing Facility"
@@ -87,23 +89,25 @@ export default function Home() {
       </section>
 
       {/* Products Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 section-background-alt">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900">Our Premium Products</h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+          <div className="text-center mb-16 fade-in">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Our Premium Products</h2>
+            <p className="mt-4 text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
               Discover our range of high-quality kitchen equipment designed for performance and durability
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.slice(0, 3).map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {products.slice(0, 3).map((product, index) => (
+              <div key={product.id} className="fade-in" style={{ animationDelay: `${index * 0.2}s` }}>
+                <ProductCard product={product} />
+              </div>
             ))}
           </div>
 
           <div className="mt-12 text-center">
-            <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white">
+            <Button size="lg" className="btn-modern-primary">
               <Link href="/products">View All Products</Link>
             </Button>
           </div>
@@ -111,48 +115,52 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 section-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900">Why Choose Syena Kitchenconceptz</h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+          <div className="text-center mb-16 fade-in">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Why Choose Syena Kitchenconceptz</h2>
+            <p className="mt-4 text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
               Our commitment to quality and innovation sets us apart
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature) => (
-              <FeatureCard key={feature.id} feature={feature} />
+            {features.map((feature, index) => (
+              <div key={feature.id} className="fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                <FeatureCard feature={feature} />
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-gray-900 text-white">
+      <section className="py-20 bg-gray-900 dark:bg-gray-950 text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 fade-in">
             <h2 className="text-3xl font-bold">What Our Clients Say</h2>
-            <p className="mt-4 text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="mt-4 text-xl text-gray-300 dark:text-gray-400 max-w-3xl mx-auto">
               Trusted by restaurants, hotels, and homeowners across India
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimonials.map((testimonial) => (
-              <TestimonialCard key={testimonial.id} testimonial={testimonial} />
+            {testimonials.map((testimonial, index) => (
+              <div key={testimonial.id} className="fade-in" style={{ animationDelay: `${index * 0.2}s` }}>
+                <TestimonialCard testimonial={testimonial} />
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 section-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-12">
-            <div className="lg:w-1/2">
-              <h2 className="text-3xl font-bold mb-6 text-gray-900">Get In Touch</h2>
-              <p className="text-lg text-gray-700 mb-8">
+            <div className="lg:w-1/2 fade-in">
+              <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">Get In Touch</h2>
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
                 Have questions about our products or services? Contact us today and our team will be happy to assist
                 you.
               </p>
@@ -160,14 +168,14 @@ export default function Home() {
               <ContactInfo />
             </div>
 
-            <div className="lg:w-1/2">
-              <div className="bg-gray-50 p-8 rounded-lg shadow-md">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Request a Quote</h3>
-                <p className="text-gray-700 mb-6">
+            <div className="lg:w-1/2 slide-in-right">
+              <div className="glass-card p-8">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Request a Quote</h3>
+                <p className="text-gray-700 dark:text-gray-300 mb-6">
                   Interested in our products? Fill out our quote request form and we'll get back to you with pricing and
                   more information.
                 </p>
-                <Button onClick={openQuoteModal} className="w-full bg-red-600 hover:bg-red-700 text-white">
+                <Button onClick={openQuoteModal} className="w-full btn-modern-primary">
                   Request a Quote
                 </Button>
               </div>
@@ -185,7 +193,7 @@ function ContactInfo() {
       <div className="flex items-start">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-red-600 mr-4 mt-1"
+          className="h-6 w-6 text-red-600 dark:text-red-400 mr-4 mt-1"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -198,15 +206,15 @@ function ContactInfo() {
           />
         </svg>
         <div>
-          <h3 className="font-semibold text-gray-900">Phone</h3>
-          <p className="text-gray-700">{companyInfo.phone.sales}</p>
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100">Phone</h3>
+          <p className="text-gray-700 dark:text-gray-300">{companyInfo.phone.sales}</p>
         </div>
       </div>
 
       <div className="flex items-start">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-red-600 mr-4 mt-1"
+          className="h-6 w-6 text-red-600 dark:text-red-400 mr-4 mt-1"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -219,15 +227,15 @@ function ContactInfo() {
           />
         </svg>
         <div>
-          <h3 className="font-semibold text-gray-900">Email</h3>
-          <p className="text-gray-700">{companyInfo.email.info}</p>
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100">Email</h3>
+          <p className="text-gray-700 dark:text-gray-300">{companyInfo.email.info}</p>
         </div>
       </div>
 
       <div className="flex items-start">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-red-600 mr-4 mt-1"
+          className="h-6 w-6 text-red-600 dark:text-red-400 mr-4 mt-1"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -241,8 +249,8 @@ function ContactInfo() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
         <div>
-          <h3 className="font-semibold text-gray-900">Address</h3>
-          <p className="text-gray-700">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100">Address</h3>
+          <p className="text-gray-700 dark:text-gray-300">
             {companyInfo.address.city}, {companyInfo.address.state}, {companyInfo.address.country}
           </p>
         </div>
@@ -251,7 +259,7 @@ function ContactInfo() {
       <div className="flex items-start">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-red-600 mr-4 mt-1"
+          className="h-6 w-6 text-red-600 dark:text-red-400 mr-4 mt-1"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -264,8 +272,8 @@ function ContactInfo() {
           />
         </svg>
         <div>
-          <h3 className="font-semibold text-gray-900">Business Hours</h3>
-          <p className="text-gray-700">{companyInfo.hours.weekdays}</p>
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100">Business Hours</h3>
+          <p className="text-gray-700 dark:text-gray-300">{companyInfo.hours.weekdays}</p>
         </div>
       </div>
     </div>

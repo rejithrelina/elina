@@ -93,22 +93,30 @@ export default function GalleryPage() {
   }))
 
   return (
-    <main className="min-h-screen py-20">
+    <main className="min-h-screen py-20 page-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900">Our Gallery</h1>
-          <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+        <div className="text-center mb-16 fade-in">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">Our Gallery</h1>
+          <p className="mt-4 text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             Explore our portfolio of premium kitchen equipment and installations
           </p>
         </div>
 
         <Tabs defaultValue="all" className="w-full">
           <div className="flex justify-center mb-12">
-            <TabsList className="grid grid-cols-4 w-full max-w-2xl">
-              <TabsTrigger value="all">All Projects</TabsTrigger>
-              <TabsTrigger value="commercial">Commercial</TabsTrigger>
-              <TabsTrigger value="renovation">Renovation</TabsTrigger>
-              <TabsTrigger value="equipment">Equipment</TabsTrigger>
+            <TabsList className="grid grid-cols-4 w-full max-w-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+              <TabsTrigger value="all" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
+                All Projects
+              </TabsTrigger>
+              <TabsTrigger value="commercial" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
+                Commercial
+              </TabsTrigger>
+              <TabsTrigger value="renovation" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
+                Renovation
+              </TabsTrigger>
+              <TabsTrigger value="equipment" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
+                Equipment
+              </TabsTrigger>
             </TabsList>
           </div>
 
@@ -169,7 +177,7 @@ export default function GalleryPage() {
 function GalleryItem({ item, onClick }) {
   return (
     <div
-      className="group relative overflow-hidden rounded-lg shadow-md transition-all duration-300 hover:shadow-xl cursor-pointer"
+      className="group relative overflow-hidden rounded-lg shadow-md transition-all duration-300 hover:shadow-xl cursor-pointer modern-card"
       onClick={onClick}
     >
       <div className="relative h-72 w-full overflow-hidden">

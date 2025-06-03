@@ -5,11 +5,11 @@ import { products } from "@/lib/data"
 
 export default function ProductsPage() {
   return (
-    <main className="min-h-screen py-20">
+    <main className="min-h-screen py-20 page-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900">Our Products</h1>
-          <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+        <div className="text-center mb-16 fade-in">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">Our Products</h1>
+          <p className="mt-4 text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             Explore our comprehensive range of high-quality kitchen equipment
           </p>
         </div>
@@ -45,20 +45,21 @@ export default function ProductsPage() {
 
         {/* Featured Products */}
         <div className="mt-20">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Featured Products</h2>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8 text-center">Featured Products</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.slice(0, 6).map((product) => (
+            {products.slice(0, 6).map((product, index) => (
               <div
                 key={product.id}
-                className="bg-white rounded-lg overflow-hidden shadow-md transition-transform hover:shadow-lg hover:-translate-y-1"
+                className="modern-card overflow-hidden fade-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="relative h-64 w-full">
                   <Image src={product.image || "/placeholder.svg"} alt={product.name} fill className="object-cover" />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{product.name}</h3>
-                  <p className="text-gray-600 mb-4">{product.description}</p>
-                  <Button variant="outline" className="w-full text-red-600 border-red-600 hover:bg-red-50">
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">{product.name}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">{product.description}</p>
+                  <Button variant="outline" className="w-full btn-modern-outline">
                     <Link href="/products-list">View Details</Link>
                   </Button>
                 </div>
@@ -68,7 +69,7 @@ export default function ProductsPage() {
         </div>
 
         {/* CTA Section */}
-        <div className="mt-20 bg-red-600 text-white p-12 rounded-lg text-center">
+        <div className="mt-20 bg-red-600 dark:bg-red-700 text-white p-12 rounded-lg text-center">
           <h2 className="text-3xl font-bold mb-6">Need Help Choosing the Right Equipment?</h2>
           <p className="text-xl mb-8 max-w-3xl mx-auto">
             Our team of experts is ready to assist you in finding the perfect kitchen solutions for your needs.
@@ -77,7 +78,7 @@ export default function ProductsPage() {
             <Button size="lg" className="bg-white text-red-600 hover:bg-gray-100">
               <Link href="/contact">Contact Us</Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-black border-white hover:bg-white/10">
+            <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10">
               <Link href="/products/custom">Custom Solutions</Link>
             </Button>
           </div>
@@ -89,14 +90,14 @@ export default function ProductsPage() {
 
 function CategoryCard({ title, description, image, link }) {
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-md transition-transform hover:shadow-lg hover:-translate-y-1">
+    <div className="modern-card overflow-hidden fade-in">
       <div className="relative h-48 w-full">
         <Image src={image || "/placeholder.svg"} alt={title} fill className="object-cover" />
       </div>
       <div className="p-6">
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>
-        <p className="text-gray-600 mb-4">{description}</p>
-        <Button className="w-full bg-red-600 hover:bg-red-700 text-white">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">{title}</h3>
+        <p className="text-gray-600 dark:text-gray-400 mb-4">{description}</p>
+        <Button className="w-full btn-modern-primary">
           <Link href={link}>Explore {title}</Link>
         </Button>
       </div>

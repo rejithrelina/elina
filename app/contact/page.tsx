@@ -7,40 +7,40 @@ export default function ContactPage() {
   const { openQuoteModal } = useQuoteModal()
 
   return (
-    <main className="min-h-screen py-20">
+    <main className="min-h-screen py-20 page-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900">Contact Us</h1>
-          <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+        <div className="text-center mb-16 fade-in">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">Contact Us</h1>
+          <p className="mt-4 text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             Have questions or need more information? We're here to help.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Request a Quote or Information</h2>
-            <div className="bg-gray-50 p-8 rounded-lg shadow-md">
-              <p className="text-gray-700 mb-6">
+          <div className="slide-in-left">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Request a Quote or Information</h2>
+            <div className="glass-card p-8">
+              <p className="text-gray-700 dark:text-gray-300 mb-6">
                 Please fill out the form below to request a quote or more information about our products and services.
                 Our team will get back to you as soon as possible.
               </p>
-              <Button onClick={openQuoteModal} className="w-full bg-red-600 hover:bg-red-700 text-white">
+              <Button onClick={openQuoteModal} className="w-full btn-modern-primary">
                 Request a Quote
               </Button>
             </div>
           </div>
 
           {/* Contact Information */}
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Contact Information</h2>
+          <div className="slide-in-right">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Contact Information</h2>
 
-            <div className="bg-gray-50 p-8 rounded-lg mb-8">
+            <div className="glass-card p-8 mb-8">
               <div className="space-y-6">
                 <div className="flex items-start">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-red-600 mr-4 mt-1"
+                    className="h-6 w-6 text-red-600 dark:text-red-400 mr-4 mt-1"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -59,8 +59,8 @@ export default function ContactPage() {
                     />
                   </svg>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Address</h3>
-                    <p className="text-gray-700">
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">Address</h3>
+                    <p className="text-gray-700 dark:text-gray-300">
                       {companyInfo.name}
                       <br />
                       {companyInfo.address.line1}
@@ -77,7 +77,7 @@ export default function ContactPage() {
                 <div className="flex items-start">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-red-600 mr-4 mt-1"
+                    className="h-6 w-6 text-red-600 dark:text-red-400 mr-4 mt-1"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -90,16 +90,16 @@ export default function ContactPage() {
                     />
                   </svg>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Phone</h3>
-                    <p className="text-gray-700">{companyInfo.phone.main}</p>
-                    <p className="text-gray-700">{companyInfo.phone.sales} (Sales)</p>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">Phone</h3>
+                    <p className="text-gray-700 dark:text-gray-300">{companyInfo.phone.main}</p>
+                    <p className="text-gray-700 dark:text-gray-300">{companyInfo.phone.sales} (Sales)</p>
                   </div>
                 </div>
 
                 <div className="flex items-start">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-red-600 mr-4 mt-1"
+                    className="h-6 w-6 text-red-600 dark:text-red-400 mr-4 mt-1"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -112,16 +112,16 @@ export default function ContactPage() {
                     />
                   </svg>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Email</h3>
-                    <p className="text-gray-700">{companyInfo.email.info}</p>
-                    <p className="text-gray-700">{companyInfo.email.sales}</p>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">Email</h3>
+                    <p className="text-gray-700 dark:text-gray-300">{companyInfo.email.info}</p>
+                    <p className="text-gray-700 dark:text-gray-300">{companyInfo.email.sales}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-red-600 mr-4 mt-1"
+                    className="h-6 w-6 text-red-600 dark:text-red-400 mr-4 mt-1"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -134,8 +134,8 @@ export default function ContactPage() {
                     />
                   </svg>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Business Hours</h3>
-                    <p className="text-gray-700">
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">Business Hours</h3>
+                    <p className="text-gray-700 dark:text-gray-300">
                       {companyInfo.hours.weekdays}
                       <br />
                       {companyInfo.hours.weekend}

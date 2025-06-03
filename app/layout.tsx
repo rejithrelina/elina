@@ -9,6 +9,8 @@ import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { QuoteModalProvider } from "@/context/quote-modal-context"
 import { CartProvider } from "@/context/cart-context"
+import { WishlistProvider } from "@/components/wishlist-provider"
+import { ToastProvider } from "@/components/toast-provider"
 import QuoteModalWrapper from "@/components/quote-modal-wrapper"
 import { Suspense } from "react"
 
@@ -99,18 +101,22 @@ export default function RootLayout({
         </script>
       </head>
       <body className={inter.className}>
-        <CartProvider>
-          <QuoteModalProvider>
-            <Suspense>
-              <Header />
-              {children}
-              <Footer />
-              <QuoteModalWrapper />
-            </Suspense>
-            <Analytics />
-            <SpeedInsights />
-          </QuoteModalProvider>
-        </CartProvider>
+        <ToastProvider>
+          <WishlistProvider>
+            <CartProvider>
+              <QuoteModalProvider>
+                <Suspense>
+                  <Header />
+                  {children}
+                  <Footer />
+                  <QuoteModalWrapper />
+                </Suspense>
+                <Analytics />
+                <SpeedInsights />
+              </QuoteModalProvider>
+            </CartProvider>
+          </WishlistProvider>
+        </ToastProvider>
       </body>
     </html>
   )

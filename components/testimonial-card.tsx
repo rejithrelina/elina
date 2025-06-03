@@ -1,6 +1,6 @@
 export default function TestimonialCard({ testimonial }) {
   return (
-    <div className="bg-gray-800 p-6 rounded-lg">
+    <div className="bg-gray-800 dark:bg-gray-900 p-6 rounded-lg border border-gray-700">
       <div className="flex items-center mb-4">
         {[...Array(5)].map((_, i) => (
           <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
@@ -8,9 +8,9 @@ export default function TestimonialCard({ testimonial }) {
           </svg>
         ))}
       </div>
-      <p className="text-gray-300 mb-4">"{testimonial.text}"</p>
+      <p className="text-gray-300 dark:text-gray-400 mb-4">"{testimonial.text}"</p>
       <div>
-        <p className="font-semibold">{testimonial.name}</p>
+        <p className="font-semibold text-white">{testimonial.name}</p>
         <p className="text-gray-400 text-sm">{testimonial.position}</p>
       </div>
     </div>
