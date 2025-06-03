@@ -48,7 +48,7 @@ export default function AboutPage() {
             </div>
             <div className="lg:w-1/2 relative h-[400px] w-full rounded-lg overflow-hidden shadow-xl slide-in-right">
               <Image
-                src="https://placehold.co/800x600.png"
+                src="https://elina.frappe.cloud/files/ourstory.png"
                 alt="Syena Kitchenconceptz History"
                 fill
                 className="object-cover"
