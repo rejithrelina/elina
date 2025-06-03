@@ -73,14 +73,15 @@ export default function Header() {
                   </svg>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="glass-card border-gray-200/50 dark:border-gray-700/50">
-                  <DropdownMenuItem>
-                    <Link href="/products/commercial" className="w-full">
-                      Commercial Equipment
-                    </Link>
-                  </DropdownMenuItem>
+                  
                   <DropdownMenuItem>
                     <Link href="/products/custom" className="w-full">
                       Custom Projects
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link href="/products/commercial" className="w-full">
+                      Commercial Equipment
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
@@ -96,11 +97,12 @@ export default function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
               <Link
-                href="/about"
+                href="/products-list"
                 className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors"
               >
-                About Us
+                Products Catalog
               </Link>
+              
               <Link
                 href="/gallery"
                 className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors"
@@ -108,17 +110,18 @@ export default function Header() {
                 Gallery
               </Link>
               <Link
+                href="/about"
+                className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors"
+              >
+                About Us
+              </Link>
+              <Link
                 href="/contact"
                 className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors"
               >
                 Contact
               </Link>
-              <Link
-                href="/products-list"
-                className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors"
-              >
-                Products Catalog
-              </Link>
+              
             </nav>
 
             {/* Action Buttons */}
