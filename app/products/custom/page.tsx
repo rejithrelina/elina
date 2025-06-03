@@ -46,13 +46,14 @@ export default function CustomProductsPage() {
     image: "https://placehold.co/600x400.png",
     process: ["Production Flow Design", "Bulk Equipment Installation", "Cold Storage Integration", "Automation"],
   },
+  /*
   {
     id: 7,
     title: "R&D Kitchens",
     description: "Custom-built kitchens for testing, food innovation, and product development.",
     image: "https://placehold.co/600x400.png",
     process: ["Requirement Gathering", "Specialized Equipment", "Prototype Setup", "Iteration Support"],
-  },
+  },*/
 ]
 
 
