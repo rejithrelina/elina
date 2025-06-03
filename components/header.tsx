@@ -61,7 +61,7 @@ export default function Header() {
               </Link>
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors">
-                  Products
+                  Services
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="ml-1 h-4 w-4"
