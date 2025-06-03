@@ -94,7 +94,7 @@ export default function AccessoriesPage() {
               </div>
             </div>
           ))}
-        </div> 
+        </div>  */}
 
         {/* Features Section */}
         <div className="glass-card p-8 mb-16">
