@@ -10,13 +10,16 @@ import { useCart } from "@/context/cart-context"
 import { useWishlist } from "@/components/wishlist-provider"
 import CartModal from "@/components/cart-modal"
 import CartCheckoutModal from "@/components/cart-checkout-modal"
-import ThemeToggle from "@/components/theme-toggle"
+import WishlistModal from "@/components/wishlist-modal"
 import { ShoppingCart, Heart, Search, Menu, X } from "lucide-react"
+import SearchModal from "@/components/search-modal"
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isCartModalOpen, setIsCartModalOpen] = useState(false)
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false)
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
+  const [isWishlistModalOpen, setIsWishlistModalOpen] = useState(false)
 
   const { openQuoteModal } = useQuoteModal()
   const { getTotalItems } = useCart()
@@ -28,6 +31,10 @@ export default function Header() {
 
   const handleCartClick = () => {
     setIsCartModalOpen(true)
+  }
+
+  const handleWishlistClick = () => {
+    setIsWishlistModalOpen(true)
   }
 
   const handleCheckout = () => {
@@ -73,7 +80,6 @@ export default function Header() {
                   </svg>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="glass-card border-gray-200/50 dark:border-gray-700/50">
-                  
                   <DropdownMenuItem>
                     <Link href="/products/custom" className="w-full">
                       Custom Projects
@@ -102,7 +108,7 @@ export default function Header() {
               >
                 Products Catalog
               </Link>
-              
+
               <Link
                 href="/gallery"
                 className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors"
@@ -121,7 +127,6 @@ export default function Header() {
               >
                 Contact
               </Link>
-              
             </nav>
 
             {/* Action Buttons */}
@@ -131,6 +136,7 @@ export default function Header() {
                 variant="ghost"
                 size="icon"
                 className="relative hover:scale-110 transition-transform hover:bg-gray-100 dark:hover:bg-gray-800"
+                onClick={() => setIsSearchModalOpen(true)}
               >
                 <Search className="h-5 w-5 text-gray-700 dark:text-gray-300" />
               </Button>
@@ -140,6 +146,7 @@ export default function Header() {
                 variant="ghost"
                 size="icon"
                 className="relative hover:scale-110 transition-transform hover:bg-gray-100 dark:hover:bg-gray-800"
+                onClick={handleWishlistClick}
               >
                 <Heart className="h-5 w-5 text-gray-700 dark:text-gray-300" />
                 {getTotalWishlistItems() > 0 && (
@@ -175,6 +182,21 @@ export default function Header() {
 
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center space-x-2">
+              {/* Mobile Wishlist Icon */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative hover:bg-gray-100 dark:hover:bg-gray-800"
+                onClick={handleWishlistClick}
+              >
+                <Heart className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                {getTotalWishlistItems() > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {getTotalWishlistItems()}
+                  </span>
+                )}
+              </Button>
+
               {/* Mobile Cart Icon */}
               <Button
                 variant="ghost"
@@ -303,6 +325,12 @@ export default function Header() {
 
       {/* Checkout Modal */}
       <CartCheckoutModal isOpen={isCheckoutModalOpen} onClose={() => setIsCheckoutModalOpen(false)} />
+
+      {/* Search Modal */}
+      <SearchModal isOpen={isSearchModalOpen} onClose={() => setIsSearchModalOpen(false)} />
+
+      {/* Wishlist Modal */}
+      <WishlistModal isOpen={isWishlistModalOpen} onClose={() => setIsWishlistModalOpen(false)} />
     </>
   )
 }

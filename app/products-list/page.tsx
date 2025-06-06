@@ -9,6 +9,7 @@ import CartCheckoutModal from "@/components/cart-checkout-modal"
 import BrandFilter from "@/components/brand-filter"
 import ModernProductCard from "@/components/modern-product-card"
 import { ProductGridSkeleton } from "@/components/loading-skeleton"
+import { useSearchParams, useRouter } from "next/navigation"
 
 interface Product {
   item_code: string
@@ -34,8 +35,12 @@ export default function ProductsListPage() {
   const [itemsPerPage, setItemsPerPage] = useState(20)
   const [totalItems, setTotalItems] = useState(0)
   const [showOnlyWithImages, setShowOnlyWithImages] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [searchInput, setSearchInput] = useState("")
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
+  // Update the initial search state
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "")
+  const [searchInput, setSearchInput] = useState(searchParams.get("search") || "")
   const [selectedBrand, setSelectedBrand] = useState("")
   const [isBrandFilterOpen, setIsBrandFilterOpen] = useState(false)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
@@ -44,18 +49,38 @@ export default function ProductsListPage() {
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false)
 
   // Debounce search to avoid too many API calls
-  const debounceSearch = useCallback((query: string) => {
-    const timer = setTimeout(() => {
-      setSearchQuery(query)
-      setCurrentPage(1) // Reset to first page when searching
-    }, 500)
-    return () => clearTimeout(timer)
-  }, [])
+  const debounceSearch = useCallback(
+    (query: string) => {
+      const timer = setTimeout(() => {
+        setSearchQuery(query)
+        setCurrentPage(1) // Reset to first page when searching
+
+        // Update URL without triggering a page reload
+        const newUrl = new URL(window.location.href)
+        if (query.trim()) {
+          newUrl.searchParams.set("search", query.trim())
+        } else {
+          newUrl.searchParams.delete("search")
+        }
+        router.replace(newUrl.pathname + newUrl.search, { scroll: false })
+      }, 500)
+      return () => clearTimeout(timer)
+    },
+    [router],
+  )
 
   useEffect(() => {
     const cleanup = debounceSearch(searchInput)
     return cleanup
   }, [searchInput, debounceSearch])
+
+  useEffect(() => {
+    const urlSearch = searchParams.get("search")
+    if (urlSearch && urlSearch !== searchQuery) {
+      setSearchInput(urlSearch)
+      setSearchQuery(urlSearch)
+    }
+  }, [searchParams])
 
   const fetchProducts = async (page: number, limit: number, withImagesOnly = false, search = "", brand = "") => {
     setLoading(true)
@@ -122,6 +147,10 @@ export default function ProductsListPage() {
   const clearSearch = () => {
     setSearchInput("")
     setSearchQuery("")
+    // Clear URL search parameter
+    const newUrl = new URL(window.location.href)
+    newUrl.searchParams.delete("search")
+    router.replace(newUrl.pathname + newUrl.search, { scroll: false })
   }
 
   const handleBrandChange = (brand: string) => {
