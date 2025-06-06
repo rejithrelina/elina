@@ -484,7 +484,7 @@ export default function ProductDetailPage() {
                               }}
                               className="modern-input w-full"
                             >
-                              <option value="">All {attr.attribute}</option>
+                              <option value="">All {/*attr.attribute*/}</option>
                               {attributeDetails[attr.attribute].item_attribute_values?.map((value) => (
                                 <option key={value.attribute_value} value={value.attribute_value}>
                                   {value.attribute_value}
