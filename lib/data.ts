@@ -196,7 +196,7 @@ export const teamMembers = [
     id: 1,
     name: "P Jagadeesh Kumar",
     position: "Chief Executive Officer",
-    bio: "P Jagadeesh Kumar is a seasoned executive with a strong background in glass and crockery manufacturing. He leads Syena's vision for growth, focusing on innovation and market expansion.",
+    bio: "P Jagadeesh Kumar is a seasoned executive with a strong background in glass and crockery trading industry. He leads Syena's vision for growth, focusing on innovation and market expansion.",
     image: "https://elina.frappe.cloud/files/Jagadeesh-Kumar.png",
   },
   {
